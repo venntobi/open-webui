@@ -107,47 +107,28 @@ DEFAULT_CONFIG = {
         "default_locale": "",
         "prompt_suggestions": [
             {
-                "title": [
-                    "Help me study",
-                    "vocabulary for a college entrance exam",
-                ],
-                "content": "Help me study vocabulary: write a sentence for me to fill in the blank, and I'll try to pick the correct option.",
+                "title": ["Hilf mir beim Lernen", "Vokabeln für die Aufnahmeprüfung an einer Hochschule"],
+                "content": "Hilf mir beim Vokabellernen: Schreib mir einen Satz, um die Lücke zu füllen, und ich versuche, die richtige Option auszuwählen.",
             },
             {
-                "title": [
-                    "Give me ideas",
-                    "for what to do with my kids' art",
-                ],
-                "content": "What are 5 creative things I could do with my kids' art? I don't want to throw them away, but it's also so much clutter.",
+                "title": ["Gib mir Ideen", "was ich mit der Kunst meiner Kinder machen soll"],
+                "content": "Welche 5 kreativen Dinge kann ich mit der Kunst meiner Kinder machen? Ich möchte sie nicht wegwerfen, aber es ist auch so viel Unordnung.",
             },
             {
-                "title": ["Tell me a fun fact", "about the Roman Empire"],
-                "content": "Tell me a random fun fact about the Roman Empire",
+                "title": ["Erzähl mir eine lustige Tatsache", "über das Römische Reich"],
+                "content": "Erzähl mir eine zufällige lustige Tatsache über das Römische Reich.",
             },
             {
-                "title": [
-                    "Show me a code snippet",
-                    "of a website's sticky header",
-                ],
-                "content": "Show me a code snippet of a website's sticky header in CSS and JavaScript.",
+                "title": ["Zeig mir einen Codeausschnitt", "für einen Sticky Header einer Webseite"],
+                "content": "Zeig mir einen Codeausschnitt für einen Sticky Header einer Webseite in CSS und JavaScript.",
             },
             {
-                "title": [
-                    "Explain options trading",
-                    "if I'm familiar with buying and selling stocks",
-                ],
-                "content": "Explain options trading in simple terms if I'm familiar with buying and selling stocks.",
+                "title": ["Erkläre Optionshandel", "wenn ich mich mit Aktien auskenne"],
+                "content": "Erkläre den Optionshandel in einfachen Worten, wenn ich mich mit dem Kaufen und Verkaufen von Aktien auskenne.",
             },
             {
-                "title": ["Overcome procrastination", "give me tips"],
-                "content": "Could you start by asking me about instances when I procrastinate the most and then give me some suggestions to overcome it?",
-            },
-            {
-                "title": [
-                    "Grammar check",
-                    "rewrite it for better readability ",
-                ],
-                "content": 'Check the following sentence for grammar and clarity: "[sentence]". Rewrite it for better readability while maintaining its original meaning.',
+                "title": ["Überwinde Aufschieberitis", "gib mir Tipps"],
+                "content": "Könntest du damit beginnen, mich nach Situationen zu fragen, in denen ich am meisten prokrastiniere, und mir dann Vorschläge geben, wie ich das überwinden kann?",
             },
         ],
     },
