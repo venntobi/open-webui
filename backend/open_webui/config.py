@@ -215,15 +215,11 @@ class PersistentConfig(Generic[T]):
 
     @property
     def __dict__(self):
-        raise TypeError(
-            "PersistentConfig object cannot be converted to dict, use config_get or .value instead."
-        )
+        raise TypeError("PersistentConfig object cannot be converted to dict, use config_get or .value instead.")
 
     def __getattribute__(self, item):
         if item == "__dict__":
-            raise TypeError(
-                "PersistentConfig object cannot be converted to dict, use config_get or .value instead."
-            )
+            raise TypeError("PersistentConfig object cannot be converted to dict, use config_get or .value instead.")
         return super().__getattribute__(item)
 
     def update(self):
@@ -285,9 +281,7 @@ API_KEY_ALLOWED_ENDPOINTS = PersistentConfig(
 )
 
 
-JWT_EXPIRES_IN = PersistentConfig(
-    "JWT_EXPIRES_IN", "auth.jwt_expiry", os.environ.get("JWT_EXPIRES_IN", "-1")
-)
+JWT_EXPIRES_IN = PersistentConfig("JWT_EXPIRES_IN", "auth.jwt_expiry", os.environ.get("JWT_EXPIRES_IN", "-1"))
 
 ####################################
 # OAuth config
@@ -467,10 +461,7 @@ OAUTH_ROLES_CLAIM = PersistentConfig(
 OAUTH_ALLOWED_ROLES = PersistentConfig(
     "OAUTH_ALLOWED_ROLES",
     "oauth.allowed_roles",
-    [
-        role.strip()
-        for role in os.environ.get("OAUTH_ALLOWED_ROLES", "user,admin").split(",")
-    ],
+    [role.strip() for role in os.environ.get("OAUTH_ALLOWED_ROLES", "user,admin").split(",")],
 )
 
 OAUTH_ADMIN_ROLES = PersistentConfig(
@@ -482,10 +473,7 @@ OAUTH_ADMIN_ROLES = PersistentConfig(
 OAUTH_ALLOWED_DOMAINS = PersistentConfig(
     "OAUTH_ALLOWED_DOMAINS",
     "oauth.allowed_domains",
-    [
-        domain.strip()
-        for domain in os.environ.get("OAUTH_ALLOWED_DOMAINS", "*").split(",")
-    ],
+    [domain.strip() for domain in os.environ.get("OAUTH_ALLOWED_DOMAINS", "*").split(",")],
 )
 
 
@@ -508,11 +496,7 @@ def load_oauth_providers():
             "register": google_oauth_register,
         }
 
-    if (
-        MICROSOFT_CLIENT_ID.value
-        and MICROSOFT_CLIENT_SECRET.value
-        and MICROSOFT_CLIENT_TENANT_ID.value
-    ):
+    if MICROSOFT_CLIENT_ID.value and MICROSOFT_CLIENT_SECRET.value and MICROSOFT_CLIENT_TENANT_ID.value:
 
         def microsoft_oauth_register(client):
             client.register(
@@ -553,11 +537,7 @@ def load_oauth_providers():
             "sub_claim": "id",
         }
 
-    if (
-        OAUTH_CLIENT_ID.value
-        and OAUTH_CLIENT_SECRET.value
-        and OPENID_PROVIDER_URL.value
-    ):
+    if OAUTH_CLIENT_ID.value and OAUTH_CLIENT_SECRET.value and OPENID_PROVIDER_URL.value:
 
         def oidc_oauth_register(client):
             client.register(
@@ -620,9 +600,7 @@ if CUSTOM_NAME:
         if r.ok:
             if "logo" in data:
                 WEBUI_FAVICON_URL = url = (
-                    f"https://api.openwebui.com{data['logo']}"
-                    if data["logo"][0] == "/"
-                    else data["logo"]
+                    f"https://api.openwebui.com{data['logo']}" if data["logo"][0] == "/" else data["logo"]
                 )
 
                 r = requests.get(url, stream=True)
@@ -632,11 +610,7 @@ if CUSTOM_NAME:
                         shutil.copyfileobj(r.raw, f)
 
             if "splash" in data:
-                url = (
-                    f"https://api.openwebui.com{data['splash']}"
-                    if data["splash"][0] == "/"
-                    else data["splash"]
-                )
+                url = f"https://api.openwebui.com{data['splash']}" if data["splash"][0] == "/" else data["splash"]
 
                 r = requests.get(url, stream=True)
                 if r.status_code == 200:
@@ -663,9 +637,7 @@ S3_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME", None)
 S3_ENDPOINT_URL = os.environ.get("S3_ENDPOINT_URL", None)
 
 GCS_BUCKET_NAME = os.environ.get("GCS_BUCKET_NAME", None)
-GOOGLE_APPLICATION_CREDENTIALS_JSON = os.environ.get(
-    "GOOGLE_APPLICATION_CREDENTIALS_JSON", None
-)
+GOOGLE_APPLICATION_CREDENTIALS_JSON = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON", None)
 
 ####################################
 # File Upload DIR
@@ -692,27 +664,19 @@ ENABLE_OLLAMA_API = PersistentConfig(
     os.environ.get("ENABLE_OLLAMA_API", "True").lower() == "true",
 )
 
-OLLAMA_API_BASE_URL = os.environ.get(
-    "OLLAMA_API_BASE_URL", "http://localhost:11434/api"
-)
+OLLAMA_API_BASE_URL = os.environ.get("OLLAMA_API_BASE_URL", "http://localhost:11434/api")
 
 OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "")
 if OLLAMA_BASE_URL:
     # Remove trailing slash
-    OLLAMA_BASE_URL = (
-        OLLAMA_BASE_URL[:-1] if OLLAMA_BASE_URL.endswith("/") else OLLAMA_BASE_URL
-    )
+    OLLAMA_BASE_URL = OLLAMA_BASE_URL[:-1] if OLLAMA_BASE_URL.endswith("/") else OLLAMA_BASE_URL
 
 
 K8S_FLAG = os.environ.get("K8S_FLAG", "")
 USE_OLLAMA_DOCKER = os.environ.get("USE_OLLAMA_DOCKER", "false")
 
 if OLLAMA_BASE_URL == "" and OLLAMA_API_BASE_URL != "":
-    OLLAMA_BASE_URL = (
-        OLLAMA_API_BASE_URL[:-4]
-        if OLLAMA_API_BASE_URL.endswith("/api")
-        else OLLAMA_API_BASE_URL
-    )
+    OLLAMA_BASE_URL = OLLAMA_API_BASE_URL[:-4] if OLLAMA_API_BASE_URL.endswith("/api") else OLLAMA_API_BASE_URL
 
 if ENV == "prod":
     if OLLAMA_BASE_URL == "/ollama" and not K8S_FLAG:
@@ -730,9 +694,7 @@ OLLAMA_BASE_URLS = os.environ.get("OLLAMA_BASE_URLS", "")
 OLLAMA_BASE_URLS = OLLAMA_BASE_URLS if OLLAMA_BASE_URLS != "" else OLLAMA_BASE_URL
 
 OLLAMA_BASE_URLS = [url.strip() for url in OLLAMA_BASE_URLS.split(";")]
-OLLAMA_BASE_URLS = PersistentConfig(
-    "OLLAMA_BASE_URLS", "ollama.base_urls", OLLAMA_BASE_URLS
-)
+OLLAMA_BASE_URLS = PersistentConfig("OLLAMA_BASE_URLS", "ollama.base_urls", OLLAMA_BASE_URLS)
 
 OLLAMA_API_CONFIGS = PersistentConfig(
     "OLLAMA_API_CONFIGS",
@@ -763,22 +725,15 @@ OPENAI_API_KEYS = os.environ.get("OPENAI_API_KEYS", "")
 OPENAI_API_KEYS = OPENAI_API_KEYS if OPENAI_API_KEYS != "" else OPENAI_API_KEY
 
 OPENAI_API_KEYS = [url.strip() for url in OPENAI_API_KEYS.split(";")]
-OPENAI_API_KEYS = PersistentConfig(
-    "OPENAI_API_KEYS", "openai.api_keys", OPENAI_API_KEYS
-)
+OPENAI_API_KEYS = PersistentConfig("OPENAI_API_KEYS", "openai.api_keys", OPENAI_API_KEYS)
 
 OPENAI_API_BASE_URLS = os.environ.get("OPENAI_API_BASE_URLS", "")
-OPENAI_API_BASE_URLS = (
-    OPENAI_API_BASE_URLS if OPENAI_API_BASE_URLS != "" else OPENAI_API_BASE_URL
-)
+OPENAI_API_BASE_URLS = OPENAI_API_BASE_URLS if OPENAI_API_BASE_URLS != "" else OPENAI_API_BASE_URL
 
 OPENAI_API_BASE_URLS = [
-    url.strip() if url != "" else "https://api.openai.com/v1"
-    for url in OPENAI_API_BASE_URLS.split(";")
+    url.strip() if url != "" else "https://api.openai.com/v1" for url in OPENAI_API_BASE_URLS.split(";")
 ]
-OPENAI_API_BASE_URLS = PersistentConfig(
-    "OPENAI_API_BASE_URLS", "openai.api_base_urls", OPENAI_API_BASE_URLS
-)
+OPENAI_API_BASE_URLS = PersistentConfig("OPENAI_API_BASE_URLS", "openai.api_base_urls", OPENAI_API_BASE_URLS)
 
 OPENAI_API_CONFIGS = PersistentConfig(
     "OPENAI_API_CONFIGS",
@@ -789,9 +744,7 @@ OPENAI_API_CONFIGS = PersistentConfig(
 # Get the actual OpenAI API key based on the base URL
 OPENAI_API_KEY = ""
 try:
-    OPENAI_API_KEY = OPENAI_API_KEYS.value[
-        OPENAI_API_BASE_URLS.value.index("https://api.openai.com/v1")
-    ]
+    OPENAI_API_KEY = OPENAI_API_KEYS.value[OPENAI_API_BASE_URLS.value.index("https://api.openai.com/v1")]
 except Exception:
     pass
 OPENAI_API_BASE_URL = "https://api.openai.com/v1"
@@ -801,19 +754,13 @@ OPENAI_API_BASE_URL = "https://api.openai.com/v1"
 ####################################
 
 
-WEBUI_URL = PersistentConfig(
-    "WEBUI_URL", "webui.url", os.environ.get("WEBUI_URL", "http://localhost:3000")
-)
+WEBUI_URL = PersistentConfig("WEBUI_URL", "webui.url", os.environ.get("WEBUI_URL", "http://localhost:3000"))
 
 
 ENABLE_SIGNUP = PersistentConfig(
     "ENABLE_SIGNUP",
     "ui.enable_signup",
-    (
-        False
-        if not WEBUI_AUTH
-        else os.environ.get("ENABLE_SIGNUP", "True").lower() == "true"
-    ),
+    (False if not WEBUI_AUTH else os.environ.get("ENABLE_SIGNUP", "True").lower() == "true"),
 )
 
 ENABLE_LOGIN_FORM = PersistentConfig(
@@ -829,40 +776,35 @@ DEFAULT_LOCALE = PersistentConfig(
     os.environ.get("DEFAULT_LOCALE", ""),
 )
 
-DEFAULT_MODELS = PersistentConfig(
-    "DEFAULT_MODELS", "ui.default_models", os.environ.get("DEFAULT_MODELS", None)
-)
+DEFAULT_MODELS = PersistentConfig("DEFAULT_MODELS", "ui.default_models", os.environ.get("DEFAULT_MODELS", None))
 
 DEFAULT_PROMPT_SUGGESTIONS = PersistentConfig(
     "DEFAULT_PROMPT_SUGGESTIONS",
     "ui.prompt_suggestions",
     [
         {
-            "title": ["Help me study", "vocabulary for a college entrance exam"],
-            "content": "Help me study vocabulary: write a sentence for me to fill in the blank, and I'll try to pick the correct option.",
+            "title": ["Hilf mir beim Lernen", "Vokabeln für die Aufnahmeprüfung an einer Hochschule"],
+            "content": "Hilf mir beim Vokabellernen: Schreib mir einen Satz, um die Lücke zu füllen, und ich versuche, die richtige Option auszuwählen.",
         },
         {
-            "title": ["Give me ideas", "for what to do with my kids' art"],
-            "content": "What are 5 creative things I could do with my kids' art? I don't want to throw them away, but it's also so much clutter.",
+            "title": ["Gib mir Ideen", "was ich mit der Kunst meiner Kinder machen soll"],
+            "content": "Welche 5 kreativen Dinge kann ich mit der Kunst meiner Kinder machen? Ich möchte sie nicht wegwerfen, aber es ist auch so viel Unordnung.",
         },
         {
-            "title": ["Tell me a fun fact", "about the Roman Empire"],
-            "content": "Tell me a random fun fact about the Roman Empire",
+            "title": ["Erzähl mir eine lustige Tatsache", "über das Römische Reich"],
+            "content": "Erzähl mir eine zufällige lustige Tatsache über das Römische Reich.",
         },
         {
-            "title": ["Show me a code snippet", "of a website's sticky header"],
-            "content": "Show me a code snippet of a website's sticky header in CSS and JavaScript.",
+            "title": ["Zeig mir einen Codeausschnitt", "für einen Sticky Header einer Webseite"],
+            "content": "Zeig mir einen Codeausschnitt für einen Sticky Header einer Webseite in CSS und JavaScript.",
         },
         {
-            "title": [
-                "Explain options trading",
-                "if I'm familiar with buying and selling stocks",
-            ],
-            "content": "Explain options trading in simple terms if I'm familiar with buying and selling stocks.",
+            "title": ["Erkläre Optionshandel", "wenn ich mich mit Aktien auskenne"],
+            "content": "Erkläre den Optionshandel in einfachen Worten, wenn ich mich mit dem Kaufen und Verkaufen von Aktien auskenne.",
         },
         {
-            "title": ["Overcome procrastination", "give me tips"],
-            "content": "Could you start by asking me about instances when I procrastinate the most and then give me some suggestions to overcome it?",
+            "title": ["Überwinde Aufschieberitis", "gib mir Tipps"],
+            "content": "Könntest du damit beginnen, mich nach Situationen zu fragen, in denen ich am meisten prokrastiniere, und mir dann Vorschläge geben, wie ich das überwinden kann?",
         },
     ],
 )
@@ -880,51 +822,35 @@ DEFAULT_USER_ROLE = PersistentConfig(
 )
 
 USER_PERMISSIONS_WORKSPACE_MODELS_ACCESS = (
-    os.environ.get("USER_PERMISSIONS_WORKSPACE_MODELS_ACCESS", "False").lower()
-    == "true"
+    os.environ.get("USER_PERMISSIONS_WORKSPACE_MODELS_ACCESS", "False").lower() == "true"
 )
 
 USER_PERMISSIONS_WORKSPACE_KNOWLEDGE_ACCESS = (
-    os.environ.get("USER_PERMISSIONS_WORKSPACE_KNOWLEDGE_ACCESS", "False").lower()
-    == "true"
+    os.environ.get("USER_PERMISSIONS_WORKSPACE_KNOWLEDGE_ACCESS", "False").lower() == "true"
 )
 
 USER_PERMISSIONS_WORKSPACE_PROMPTS_ACCESS = (
-    os.environ.get("USER_PERMISSIONS_WORKSPACE_PROMPTS_ACCESS", "False").lower()
-    == "true"
+    os.environ.get("USER_PERMISSIONS_WORKSPACE_PROMPTS_ACCESS", "False").lower() == "true"
 )
 
 USER_PERMISSIONS_WORKSPACE_TOOLS_ACCESS = (
     os.environ.get("USER_PERMISSIONS_WORKSPACE_TOOLS_ACCESS", "False").lower() == "true"
 )
 
-USER_PERMISSIONS_CHAT_CONTROLS = (
-    os.environ.get("USER_PERMISSIONS_CHAT_CONTROLS", "True").lower() == "true"
-)
+USER_PERMISSIONS_CHAT_CONTROLS = os.environ.get("USER_PERMISSIONS_CHAT_CONTROLS", "True").lower() == "true"
 
-USER_PERMISSIONS_CHAT_FILE_UPLOAD = (
-    os.environ.get("USER_PERMISSIONS_CHAT_FILE_UPLOAD", "True").lower() == "true"
-)
+USER_PERMISSIONS_CHAT_FILE_UPLOAD = os.environ.get("USER_PERMISSIONS_CHAT_FILE_UPLOAD", "True").lower() == "true"
 
-USER_PERMISSIONS_CHAT_DELETE = (
-    os.environ.get("USER_PERMISSIONS_CHAT_DELETE", "True").lower() == "true"
-)
+USER_PERMISSIONS_CHAT_DELETE = os.environ.get("USER_PERMISSIONS_CHAT_DELETE", "True").lower() == "true"
 
-USER_PERMISSIONS_CHAT_EDIT = (
-    os.environ.get("USER_PERMISSIONS_CHAT_EDIT", "True").lower() == "true"
-)
+USER_PERMISSIONS_CHAT_EDIT = os.environ.get("USER_PERMISSIONS_CHAT_EDIT", "True").lower() == "true"
 
-USER_PERMISSIONS_CHAT_TEMPORARY = (
-    os.environ.get("USER_PERMISSIONS_CHAT_TEMPORARY", "True").lower() == "true"
-)
+USER_PERMISSIONS_CHAT_TEMPORARY = os.environ.get("USER_PERMISSIONS_CHAT_TEMPORARY", "True").lower() == "true"
 
-USER_PERMISSIONS_FEATURES_WEB_SEARCH = (
-    os.environ.get("USER_PERMISSIONS_FEATURES_WEB_SEARCH", "True").lower() == "true"
-)
+USER_PERMISSIONS_FEATURES_WEB_SEARCH = os.environ.get("USER_PERMISSIONS_FEATURES_WEB_SEARCH", "True").lower() == "true"
 
 USER_PERMISSIONS_FEATURES_IMAGE_GENERATION = (
-    os.environ.get("USER_PERMISSIONS_FEATURES_IMAGE_GENERATION", "True").lower()
-    == "true"
+    os.environ.get("USER_PERMISSIONS_FEATURES_IMAGE_GENERATION", "True").lower() == "true"
 )
 
 DEFAULT_USER_PERMISSIONS = {
@@ -981,15 +907,11 @@ DEFAULT_ARENA_MODEL = {
     },
 }
 
-WEBHOOK_URL = PersistentConfig(
-    "WEBHOOK_URL", "webhook_url", os.environ.get("WEBHOOK_URL", "")
-)
+WEBHOOK_URL = PersistentConfig("WEBHOOK_URL", "webhook_url", os.environ.get("WEBHOOK_URL", ""))
 
 ENABLE_ADMIN_EXPORT = os.environ.get("ENABLE_ADMIN_EXPORT", "True").lower() == "true"
 
-ENABLE_ADMIN_CHAT_ACCESS = (
-    os.environ.get("ENABLE_ADMIN_CHAT_ACCESS", "True").lower() == "true"
-)
+ENABLE_ADMIN_CHAT_ACCESS = os.environ.get("ENABLE_ADMIN_CHAT_ACCESS", "True").lower() == "true"
 
 ENABLE_COMMUNITY_SHARING = PersistentConfig(
     "ENABLE_COMMUNITY_SHARING",
@@ -1015,9 +937,7 @@ def validate_cors_origin(origin):
 
     # Check if the scheme is either http or https
     if parsed_url.scheme not in ["http", "https"]:
-        raise ValueError(
-            f"Invalid scheme in CORS_ALLOW_ORIGIN: '{origin}'. Only 'http' and 'https' are allowed."
-        )
+        raise ValueError(f"Invalid scheme in CORS_ALLOW_ORIGIN: '{origin}'. Only 'http' and 'https' are allowed.")
 
     # Ensure that the netloc (domain + port) is present, indicating it's a valid URL
     if not parsed_url.netloc:
@@ -1032,9 +952,7 @@ def validate_cors_origin(origin):
 CORS_ALLOW_ORIGIN = os.environ.get("CORS_ALLOW_ORIGIN", "*").split(";")
 
 if "*" in CORS_ALLOW_ORIGIN:
-    log.warning(
-        "\n\nWARNING: CORS_ALLOW_ORIGIN IS SET TO '*' - NOT RECOMMENDED FOR PRODUCTION DEPLOYMENTS.\n"
-    )
+    log.warning("\n\nWARNING: CORS_ALLOW_ORIGIN IS SET TO '*' - NOT RECOMMENDED FOR PRODUCTION DEPLOYMENTS.\n")
 
 validate_cors_origins(CORS_ALLOW_ORIGIN)
 
@@ -1307,9 +1225,7 @@ CHROMA_CLIENT_AUTH_CREDENTIALS = os.environ.get("CHROMA_CLIENT_AUTH_CREDENTIALS"
 # Comma-separated list of header=value pairs
 CHROMA_HTTP_HEADERS = os.environ.get("CHROMA_HTTP_HEADERS", "")
 if CHROMA_HTTP_HEADERS:
-    CHROMA_HTTP_HEADERS = dict(
-        [pair.split("=") for pair in CHROMA_HTTP_HEADERS.split(",")]
-    )
+    CHROMA_HTTP_HEADERS = dict([pair.split("=") for pair in CHROMA_HTTP_HEADERS.split(",")])
 else:
     CHROMA_HTTP_HEADERS = None
 CHROMA_HTTP_SSL = os.environ.get("CHROMA_HTTP_SSL", "false").lower() == "true"
@@ -1337,9 +1253,7 @@ if VECTOR_DB == "pgvector" and not PGVECTOR_DB_URL.startswith("postgres"):
     raise ValueError(
         "Pgvector requires setting PGVECTOR_DB_URL or using Postgres with vector extension as the primary database."
     )
-PGVECTOR_INITIALIZE_MAX_VECTOR_LENGTH = int(
-    os.environ.get("PGVECTOR_INITIALIZE_MAX_VECTOR_LENGTH", "1536")
-)
+PGVECTOR_INITIALIZE_MAX_VECTOR_LENGTH = int(os.environ.get("PGVECTOR_INITIALIZE_MAX_VECTOR_LENGTH", "1536"))
 
 ####################################
 # Information Retrieval (RAG)
@@ -1378,9 +1292,7 @@ TIKA_SERVER_URL = PersistentConfig(
     os.getenv("TIKA_SERVER_URL", "http://tika:9998"),  # Default for sidecar deployment
 )
 
-RAG_TOP_K = PersistentConfig(
-    "RAG_TOP_K", "rag.top_k", int(os.environ.get("RAG_TOP_K", "3"))
-)
+RAG_TOP_K = PersistentConfig("RAG_TOP_K", "rag.top_k", int(os.environ.get("RAG_TOP_K", "3")))
 RAG_RELEVANCE_THRESHOLD = PersistentConfig(
     "RAG_RELEVANCE_THRESHOLD",
     "rag.relevance_threshold",
@@ -1396,21 +1308,13 @@ ENABLE_RAG_HYBRID_SEARCH = PersistentConfig(
 RAG_FILE_MAX_COUNT = PersistentConfig(
     "RAG_FILE_MAX_COUNT",
     "rag.file.max_count",
-    (
-        int(os.environ.get("RAG_FILE_MAX_COUNT"))
-        if os.environ.get("RAG_FILE_MAX_COUNT")
-        else None
-    ),
+    (int(os.environ.get("RAG_FILE_MAX_COUNT")) if os.environ.get("RAG_FILE_MAX_COUNT") else None),
 )
 
 RAG_FILE_MAX_SIZE = PersistentConfig(
     "RAG_FILE_MAX_SIZE",
     "rag.file.max_size",
-    (
-        int(os.environ.get("RAG_FILE_MAX_SIZE"))
-        if os.environ.get("RAG_FILE_MAX_SIZE")
-        else None
-    ),
+    (int(os.environ.get("RAG_FILE_MAX_SIZE")) if os.environ.get("RAG_FILE_MAX_SIZE") else None),
 )
 
 ENABLE_RAG_WEB_LOADER_SSL_VERIFICATION = PersistentConfig(
@@ -1439,8 +1343,7 @@ RAG_EMBEDDING_MODEL = PersistentConfig(
 log.info(f"Embedding model set: {RAG_EMBEDDING_MODEL.value}")
 
 RAG_EMBEDDING_MODEL_AUTO_UPDATE = (
-    not OFFLINE_MODE
-    and os.environ.get("RAG_EMBEDDING_MODEL_AUTO_UPDATE", "True").lower() == "true"
+    not OFFLINE_MODE and os.environ.get("RAG_EMBEDDING_MODEL_AUTO_UPDATE", "True").lower() == "true"
 )
 
 RAG_EMBEDDING_MODEL_TRUST_REMOTE_CODE = (
@@ -1450,10 +1353,7 @@ RAG_EMBEDDING_MODEL_TRUST_REMOTE_CODE = (
 RAG_EMBEDDING_BATCH_SIZE = PersistentConfig(
     "RAG_EMBEDDING_BATCH_SIZE",
     "rag.embedding_batch_size",
-    int(
-        os.environ.get("RAG_EMBEDDING_BATCH_SIZE")
-        or os.environ.get("RAG_EMBEDDING_OPENAI_BATCH_SIZE", "1")
-    ),
+    int(os.environ.get("RAG_EMBEDDING_BATCH_SIZE") or os.environ.get("RAG_EMBEDDING_OPENAI_BATCH_SIZE", "1")),
 )
 
 RAG_RERANKING_MODEL = PersistentConfig(
@@ -1465,8 +1365,7 @@ if RAG_RERANKING_MODEL.value != "":
     log.info(f"Reranking model set: {RAG_RERANKING_MODEL.value}")
 
 RAG_RERANKING_MODEL_AUTO_UPDATE = (
-    not OFFLINE_MODE
-    and os.environ.get("RAG_RERANKING_MODEL_AUTO_UPDATE", "True").lower() == "true"
+    not OFFLINE_MODE and os.environ.get("RAG_RERANKING_MODEL_AUTO_UPDATE", "True").lower() == "true"
 )
 
 RAG_RERANKING_MODEL_TRUST_REMOTE_CODE = (
@@ -1489,9 +1388,7 @@ TIKTOKEN_ENCODING_NAME = PersistentConfig(
 )
 
 
-CHUNK_SIZE = PersistentConfig(
-    "CHUNK_SIZE", "rag.chunk_size", int(os.environ.get("CHUNK_SIZE", "1000"))
-)
+CHUNK_SIZE = PersistentConfig("CHUNK_SIZE", "rag.chunk_size", int(os.environ.get("CHUNK_SIZE", "1000")))
 CHUNK_OVERLAP = PersistentConfig(
     "CHUNK_OVERLAP",
     "rag.chunk_overlap",
@@ -1559,9 +1456,7 @@ RAG_OLLAMA_API_KEY = PersistentConfig(
 )
 
 
-ENABLE_RAG_LOCAL_WEB_FETCH = (
-    os.getenv("ENABLE_RAG_LOCAL_WEB_FETCH", "False").lower() == "true"
-)
+ENABLE_RAG_LOCAL_WEB_FETCH = os.getenv("ENABLE_RAG_LOCAL_WEB_FETCH", "False").lower() == "true"
 
 YOUTUBE_LOADER_LANGUAGE = PersistentConfig(
     "YOUTUBE_LOADER_LANGUAGE",
@@ -1688,9 +1583,7 @@ SEARCHAPI_ENGINE = PersistentConfig(
 BING_SEARCH_V7_ENDPOINT = PersistentConfig(
     "BING_SEARCH_V7_ENDPOINT",
     "rag.web.search.bing_search_v7_endpoint",
-    os.environ.get(
-        "BING_SEARCH_V7_ENDPOINT", "https://api.bing.microsoft.com/v7.0/search"
-    ),
+    os.environ.get("BING_SEARCH_V7_ENDPOINT", "https://api.bing.microsoft.com/v7.0/search"),
 )
 
 BING_SEARCH_V7_SUBSCRIPTION_KEY = PersistentConfig(
@@ -1749,32 +1642,20 @@ AUTOMATIC1111_API_AUTH = PersistentConfig(
 AUTOMATIC1111_CFG_SCALE = PersistentConfig(
     "AUTOMATIC1111_CFG_SCALE",
     "image_generation.automatic1111.cfg_scale",
-    (
-        float(os.environ.get("AUTOMATIC1111_CFG_SCALE"))
-        if os.environ.get("AUTOMATIC1111_CFG_SCALE")
-        else None
-    ),
+    (float(os.environ.get("AUTOMATIC1111_CFG_SCALE")) if os.environ.get("AUTOMATIC1111_CFG_SCALE") else None),
 )
 
 
 AUTOMATIC1111_SAMPLER = PersistentConfig(
     "AUTOMATIC1111_SAMPLER",
     "image_generation.automatic1111.sampler",
-    (
-        os.environ.get("AUTOMATIC1111_SAMPLER")
-        if os.environ.get("AUTOMATIC1111_SAMPLER")
-        else None
-    ),
+    (os.environ.get("AUTOMATIC1111_SAMPLER") if os.environ.get("AUTOMATIC1111_SAMPLER") else None),
 )
 
 AUTOMATIC1111_SCHEDULER = PersistentConfig(
     "AUTOMATIC1111_SCHEDULER",
     "image_generation.automatic1111.scheduler",
-    (
-        os.environ.get("AUTOMATIC1111_SCHEDULER")
-        if os.environ.get("AUTOMATIC1111_SCHEDULER")
-        else None
-    ),
+    (os.environ.get("AUTOMATIC1111_SCHEDULER") if os.environ.get("AUTOMATIC1111_SCHEDULER") else None),
 )
 
 COMFYUI_BASE_URL = PersistentConfig(
@@ -1923,13 +1804,9 @@ IMAGES_OPENAI_API_KEY = PersistentConfig(
     os.getenv("IMAGES_OPENAI_API_KEY", OPENAI_API_KEY),
 )
 
-IMAGE_SIZE = PersistentConfig(
-    "IMAGE_SIZE", "image_generation.size", os.getenv("IMAGE_SIZE", "512x512")
-)
+IMAGE_SIZE = PersistentConfig("IMAGE_SIZE", "image_generation.size", os.getenv("IMAGE_SIZE", "512x512"))
 
-IMAGE_STEPS = PersistentConfig(
-    "IMAGE_STEPS", "image_generation.steps", int(os.getenv("IMAGE_STEPS", 50))
-)
+IMAGE_STEPS = PersistentConfig("IMAGE_STEPS", "image_generation.steps", int(os.getenv("IMAGE_STEPS", 50)))
 
 IMAGE_GENERATION_MODEL = PersistentConfig(
     "IMAGE_GENERATION_MODEL",
@@ -1949,10 +1826,7 @@ WHISPER_MODEL = PersistentConfig(
 )
 
 WHISPER_MODEL_DIR = os.getenv("WHISPER_MODEL_DIR", f"{CACHE_DIR}/whisper/models")
-WHISPER_MODEL_AUTO_UPDATE = (
-    not OFFLINE_MODE
-    and os.environ.get("WHISPER_MODEL_AUTO_UPDATE", "").lower() == "true"
-)
+WHISPER_MODEL_AUTO_UPDATE = not OFFLINE_MODE and os.environ.get("WHISPER_MODEL_AUTO_UPDATE", "").lower() == "true"
 
 
 AUDIO_STT_OPENAI_API_BASE_URL = PersistentConfig(
@@ -2030,9 +1904,7 @@ AUDIO_TTS_AZURE_SPEECH_REGION = PersistentConfig(
 AUDIO_TTS_AZURE_SPEECH_OUTPUT_FORMAT = PersistentConfig(
     "AUDIO_TTS_AZURE_SPEECH_OUTPUT_FORMAT",
     "audio.tts.azure.speech_output_format",
-    os.getenv(
-        "AUDIO_TTS_AZURE_SPEECH_OUTPUT_FORMAT", "audio-24khz-160kbitrate-mono-mp3"
-    ),
+    os.getenv("AUDIO_TTS_AZURE_SPEECH_OUTPUT_FORMAT", "audio-24khz-160kbitrate-mono-mp3"),
 )
 
 
@@ -2076,9 +1948,7 @@ LDAP_ATTRIBUTE_FOR_USERNAME = PersistentConfig(
     os.environ.get("LDAP_ATTRIBUTE_FOR_USERNAME", "uid"),
 )
 
-LDAP_APP_DN = PersistentConfig(
-    "LDAP_APP_DN", "ldap.server.app_dn", os.environ.get("LDAP_APP_DN", "")
-)
+LDAP_APP_DN = PersistentConfig("LDAP_APP_DN", "ldap.server.app_dn", os.environ.get("LDAP_APP_DN", ""))
 
 LDAP_APP_PASSWORD = PersistentConfig(
     "LDAP_APP_PASSWORD",
@@ -2086,9 +1956,7 @@ LDAP_APP_PASSWORD = PersistentConfig(
     os.environ.get("LDAP_APP_PASSWORD", ""),
 )
 
-LDAP_SEARCH_BASE = PersistentConfig(
-    "LDAP_SEARCH_BASE", "ldap.server.users_dn", os.environ.get("LDAP_SEARCH_BASE", "")
-)
+LDAP_SEARCH_BASE = PersistentConfig("LDAP_SEARCH_BASE", "ldap.server.users_dn", os.environ.get("LDAP_SEARCH_BASE", ""))
 
 LDAP_SEARCH_FILTERS = PersistentConfig(
     "LDAP_SEARCH_FILTER",
@@ -2108,6 +1976,4 @@ LDAP_CA_CERT_FILE = PersistentConfig(
     os.environ.get("LDAP_CA_CERT_FILE", ""),
 )
 
-LDAP_CIPHERS = PersistentConfig(
-    "LDAP_CIPHERS", "ldap.server.ciphers", os.environ.get("LDAP_CIPHERS", "ALL")
-)
+LDAP_CIPHERS = PersistentConfig("LDAP_CIPHERS", "ldap.server.ciphers", os.environ.get("LDAP_CIPHERS", "ALL"))
