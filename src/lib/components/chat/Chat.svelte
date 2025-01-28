@@ -1921,125 +1921,134 @@
 					</div>
 				{/if}
 
-				<div class="flex flex-col flex-auto z-10 w-full">
-					{#if $settings?.landingPageMode === 'chat' || createMessagesList(history.currentId).length > 0}
+				<div class="relative flex flex-col flex-auto z-10 w-full">
+					{#if $settings?.backgroundImageUrl}
 						<div
-							class=" pb-2.5 flex flex-col justify-between w-full flex-auto overflow-auto h-0 max-w-full z-10 scrollbar-hidden"
-							id="messages-container"
-							bind:this={messagesContainerElement}
-							on:scroll={(e) => {
-								autoScroll =
-									messagesContainerElement.scrollHeight - messagesContainerElement.scrollTop <=
-									messagesContainerElement.clientHeight + 5;
-							}}
-						>
-							<div class=" h-full w-full flex flex-col">
-								<Messages
-									chatId={$chatId}
-									bind:history
-									bind:autoScroll
-									bind:prompt
+							class="absolute inset-0 bg-cover bg-center z-0 opacity-50"
+							style="background-image: url({$settings.backgroundImageUrl});"
+						></div>
+					{/if}
+
+					<div class="relative z-10 flex flex-col flex-auto w-full">
+						{#if $settings?.landingPageMode === 'chat' || createMessagesList(history.currentId).length > 0}
+							<div
+								class="pb-2.5 flex flex-col justify-between w-full flex-auto overflow-auto h-0 max-w-full z-10 scrollbar-hidden"
+								id="messages-container"
+								bind:this={messagesContainerElement}
+								on:scroll={(e) => {
+									autoScroll =
+										messagesContainerElement.scrollHeight - messagesContainerElement.scrollTop <=
+										messagesContainerElement.clientHeight + 5;
+								}}
+							>
+								<div class="h-full w-full flex flex-col">
+									<Messages
+										chatId={$chatId}
+										bind:history
+										bind:autoScroll
+										bind:prompt
+										{selectedModels}
+										{sendPrompt}
+										{showMessage}
+										{submitMessage}
+										{continueResponse}
+										{regenerateResponse}
+										{mergeResponses}
+										{chatActionHandler}
+										{addMessages}
+										bottomPadding={files.length > 0}
+									/>
+								</div>
+							</div>
+
+							<div class="pb-[1rem]">
+								<MessageInput
+									{history}
 									{selectedModels}
-									{sendPrompt}
-									{showMessage}
-									{submitMessage}
-									{continueResponse}
-									{regenerateResponse}
-									{mergeResponses}
-									{chatActionHandler}
-									{addMessages}
-									bottomPadding={files.length > 0}
+									bind:files
+									bind:prompt
+									bind:autoScroll
+									bind:selectedToolIds
+									bind:imageGenerationEnabled
+									bind:webSearchEnabled
+									bind:atSelectedModel
+									transparentBackground={$settings?.backgroundImageUrl ?? false}
+									{stopResponse}
+									{createMessagePair}
+									onChange={(input) => {
+										if (input.prompt) {
+											localStorage.setItem(`chat-input-${$chatId}`, JSON.stringify(input));
+										} else {
+											localStorage.removeItem(`chat-input-${$chatId}`);
+										}
+									}}
+									on:upload={async (e) => {
+										const { type, data } = e.detail;
+
+										if (type === 'web') {
+											await uploadWeb(data);
+										} else if (type === 'youtube') {
+											await uploadYoutubeTranscription(data);
+										} else if (type === 'google-drive') {
+											await uploadGoogleDriveFile(data);
+										}
+									}}
+									on:submit={async (e) => {
+										if (e.detail) {
+											await tick();
+											submitPrompt(
+												($settings?.richTextInput ?? true)
+													? e.detail.replaceAll('\n\n', '\n')
+													: e.detail
+											);
+										}
+									}}
+								/>
+
+								<div
+									class="absolute bottom-1 text-xs text-gray-500 text-center line-clamp-1 right-0 left-0"
+								>
+									<!-- {$i18n.t('LLMs can make mistakes. Verify important information.')} -->
+								</div>
+							</div>
+						{:else}
+							<div class="overflow-auto w-full h-full flex items-center">
+								<Placeholder
+									{history}
+									{selectedModels}
+									bind:files
+									bind:prompt
+									bind:autoScroll
+									bind:selectedToolIds
+									bind:imageGenerationEnabled
+									bind:webSearchEnabled
+									bind:atSelectedModel
+									transparentBackground={$settings?.backgroundImageUrl ?? false}
+									{stopResponse}
+									{createMessagePair}
+									on:upload={async (e) => {
+										const { type, data } = e.detail;
+
+										if (type === 'web') {
+											await uploadWeb(data);
+										} else if (type === 'youtube') {
+											await uploadYoutubeTranscription(data);
+										}
+									}}
+									on:submit={async (e) => {
+										if (e.detail) {
+											await tick();
+											submitPrompt(
+												($settings?.richTextInput ?? true)
+													? e.detail.replaceAll('\n\n', '\n')
+													: e.detail
+											);
+										}
+									}}
 								/>
 							</div>
-						</div>
-
-						<div class=" pb-[1rem]">
-							<MessageInput
-								{history}
-								{selectedModels}
-								bind:files
-								bind:prompt
-								bind:autoScroll
-								bind:selectedToolIds
-								bind:imageGenerationEnabled
-								bind:webSearchEnabled
-								bind:atSelectedModel
-								transparentBackground={$settings?.backgroundImageUrl ?? false}
-								{stopResponse}
-								{createMessagePair}
-								onChange={(input) => {
-									if (input.prompt) {
-										localStorage.setItem(`chat-input-${$chatId}`, JSON.stringify(input));
-									} else {
-										localStorage.removeItem(`chat-input-${$chatId}`);
-									}
-								}}
-								on:upload={async (e) => {
-									const { type, data } = e.detail;
-
-									if (type === 'web') {
-										await uploadWeb(data);
-									} else if (type === 'youtube') {
-										await uploadYoutubeTranscription(data);
-									} else if (type === 'google-drive') {
-										await uploadGoogleDriveFile(data);
-									}
-								}}
-								on:submit={async (e) => {
-									if (e.detail) {
-										await tick();
-										submitPrompt(
-											($settings?.richTextInput ?? true)
-												? e.detail.replaceAll('\n\n', '\n')
-												: e.detail
-										);
-									}
-								}}
-							/>
-
-							<div
-								class="absolute bottom-1 text-xs text-gray-500 text-center line-clamp-1 right-0 left-0"
-							>
-								<!-- {$i18n.t('LLMs can make mistakes. Verify important information.')} -->
-							</div>
-						</div>
-					{:else}
-						<div class="overflow-auto w-full h-full flex items-center">
-							<Placeholder
-								{history}
-								{selectedModels}
-								bind:files
-								bind:prompt
-								bind:autoScroll
-								bind:selectedToolIds
-								bind:imageGenerationEnabled
-								bind:webSearchEnabled
-								bind:atSelectedModel
-								transparentBackground={$settings?.backgroundImageUrl ?? false}
-								{stopResponse}
-								{createMessagePair}
-								on:upload={async (e) => {
-									const { type, data } = e.detail;
-
-									if (type === 'web') {
-										await uploadWeb(data);
-									} else if (type === 'youtube') {
-										await uploadYoutubeTranscription(data);
-									}
-								}}
-								on:submit={async (e) => {
-									if (e.detail) {
-										await tick();
-										submitPrompt(
-											($settings?.richTextInput ?? true)
-												? e.detail.replaceAll('\n\n', '\n')
-												: e.detail
-										);
-									}
-								}}
-							/>
-						</div>
-					{/if}
+						{/if}
+					</div>
 				</div>
 			</Pane>
 
