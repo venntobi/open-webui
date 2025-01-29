@@ -198,7 +198,7 @@
 					</select>
 				</div>
 			</div>
-			{#if $i18n.language === 'en-US'}
+			<!-- {#if $i18n.language === 'en-US'}
 				<div class="mb-2 text-xs text-gray-400 dark:text-gray-500">
 					Couldn't find your language?
 					<a
@@ -209,7 +209,7 @@
 						Help us translate Open WebUI!
 					</a>
 				</div>
-			{/if}
+			{/if} -->
 
 			<div>
 				<div class=" py-0.5 flex w-full justify-between">
