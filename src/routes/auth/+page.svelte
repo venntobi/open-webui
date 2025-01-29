@@ -123,9 +123,7 @@
 </script>
 
 <svelte:head>
-	<title>
-		{`${$WEBUI_NAME}`}
-	</title>
+	<title>Bludau</title>
 </svelte:head>
 
 <OnBoarding

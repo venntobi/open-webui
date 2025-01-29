@@ -88,7 +88,7 @@
 
 <svelte:head>
 	<title>
-		{$i18n.t('Prompts')} | {$WEBUI_NAME}
+		{$i18n.t('Prompts')} | Bludau
 	</title>
 </svelte:head>
 
