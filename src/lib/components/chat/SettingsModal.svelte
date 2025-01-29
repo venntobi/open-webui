@@ -540,7 +540,7 @@
 								</div>
 								<div class=" self-center">{$i18n.t('Account')}</div>
 							</button>
-						{:else if tabId === 'about'}
+							<!-- {:else if tabId === 'about'}
 							<button
 								class="px-0.5 py-1 min-w-fit rounded-lg flex-1 md:flex-none flex text-left transition {selectedTab ===
 								'about'
@@ -565,7 +565,7 @@
 									</svg>
 								</div>
 								<div class=" self-center">{$i18n.t('About')}</div>
-							</button>
+							</button> -->
 						{:else if tabId === 'admin'}
 							{#if $user.role === 'admin'}
 								<button
