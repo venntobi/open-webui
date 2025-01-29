@@ -1869,6 +1869,17 @@
 			<div
 				class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-white to-white/85 dark:from-gray-900 dark:to-[#171717]/90 z-0"
 			/>
+		{:else}
+			<div
+				class="absolute {$showSidebar
+					? 'md:max-w-[calc(100%-260px)] md:translate-x-[260px]'
+					: ''} top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat"
+				style="background-image: url('/static/custom-background.png')  "
+			/>
+
+			<div
+				class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-white to-white/85 dark:from-gray-900 dark:to-[#171717]/90 z-0"
+			/>
 		{/if}
 
 		<Navbar
@@ -1920,8 +1931,13 @@
 				<div class="relative flex flex-col flex-auto z-10 w-full">
 					{#if $settings?.backgroundImageUrl}
 						<div
-							class="absolute inset-0 bg-cover bg-center z-0 opacity-50"
+							class="absolute inset-0 bg-cover bg-center z-0 opacity-40"
 							style="background-image: url({$settings.backgroundImageUrl});"
+						></div>
+					{:else}
+						<div
+							class="absolute inset-0 bg-cover bg-center z-0 opacity-40"
+							style="background-image: url('/static/custom-background.png');"
 						></div>
 					{/if}
 
