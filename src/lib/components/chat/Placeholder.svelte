@@ -18,7 +18,7 @@
 
 	const i18n = getContext('i18n');
 
-	export let transparentBackground = false;
+	export let transparentBackground = true;
 
 	export let createMessagePair: Function;
 	export let stopResponse: Function;
@@ -125,7 +125,7 @@
 											($i18n.language === 'dg-DG'
 												? `/doge.png`
 												: `${WEBUI_BASE_URL}/static/favicon.png`)}
-										class=" size-9 sm:size-10 rounded-full border-[1px] border-gray-200 dark:border-none"
+										class=" w-10 h-10 sm:w-12 sm:h-12 rounded-full border-[1px] border-gray-200 dark:border-none"
 										alt="logo"
 										draggable="false"
 									/>
