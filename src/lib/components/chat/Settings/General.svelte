@@ -159,7 +159,7 @@
 <div class="flex flex-col h-full justify-between text-sm">
 	<div class="  overflow-y-scroll max-h-[28rem] lg:max-h-full">
 		<div class="">
-			<div class=" mb-1 text-sm font-medium">{$i18n.t('WebUI Settings')}</div>
+			<div class=" mb-1 text-sm font-medium">{$i18n.t('Settings')}</div>
 
 			<div class="flex w-full justify-between">
 				<div class=" self-center text-xs font-medium">{$i18n.t('Theme')}</div>
@@ -211,7 +211,7 @@
 				</div>
 			{/if} -->
 
-			<div>
+			<!-- <div>
 				<div class=" py-0.5 flex w-full justify-between">
 					<div class=" self-center text-xs font-medium">{$i18n.t('Notifications')}</div>
 
@@ -229,7 +229,7 @@
 						{/if}
 					</button>
 				</div>
-			</div>
+			</div> -->
 		</div>
 
 		{#if $user.role === 'admin' || $user?.permissions.chat?.controls}
