@@ -168,7 +168,7 @@
 
 <svelte:head>
 	<title>
-		{$i18n.t('Tools')} | Bludau
+		{$i18n.t('Tools')} | {$WEBUI_NAME}
 	</title>
 </svelte:head>
 

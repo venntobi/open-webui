@@ -182,7 +182,7 @@
 
 <svelte:head>
 	<title>
-		{$i18n.t('Functions')} | Bludau
+		{$i18n.t('Functions')} | {$WEBUI_NAME}
 	</title>
 </svelte:head>
 

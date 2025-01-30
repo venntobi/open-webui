@@ -20,7 +20,7 @@
 
 <svelte:head>
 	<title>
-		{$i18n.t('Admin Panel')} | Bludau
+		{$i18n.t('Admin Panel')} | {$WEBUI_NAME}
 	</title>
 </svelte:head>
 

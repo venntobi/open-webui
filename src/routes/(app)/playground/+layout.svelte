@@ -11,7 +11,7 @@
 
 <svelte:head>
 	<title>
-		{$i18n.t('Playground')} | Bludau
+		{$i18n.t('Playground')} | {$WEBUI_NAME}
 	</title>
 </svelte:head>
 
