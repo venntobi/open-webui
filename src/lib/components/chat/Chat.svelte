@@ -13,6 +13,7 @@
 	import { get, type Unsubscriber, type Writable } from 'svelte/store';
 	import type { i18n as i18nType } from 'i18next';
 	import { WEBUI_BASE_URL } from '$lib/constants';
+	import { background_opacity } from '$lib/config';
 
 	import {
 		chatId,
@@ -1931,13 +1932,15 @@
 				<div class="relative flex flex-col flex-auto z-10 w-full">
 					{#if $settings?.backgroundImageUrl}
 						<div
-							class="absolute inset-0 bg-cover bg-center z-0 opacity-40"
-							style="background-image: url({$settings.backgroundImageUrl});"
+							class="absolute inset-0 bg-cover bg-center z-0"
+							style="background-image: url({$settings.backgroundImageUrl}); opacity: {background_opacity /
+								100};"
 						></div>
 					{:else}
 						<div
-							class="absolute inset-0 bg-cover bg-center z-0 opacity-40"
-							style="background-image: url('/static/custom-background.png');"
+							class="absolute inset-0 bg-cover bg-center z-0"
+							style="background-image: url('/static/custom-background.png'); opacity: {background_opacity /
+								100};"
 						></div>
 					{/if}
 

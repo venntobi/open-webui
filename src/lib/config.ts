@@ -1,0 +1,1 @@
+export const background_opacity = 40
