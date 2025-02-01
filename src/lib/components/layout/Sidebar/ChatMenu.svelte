@@ -25,7 +25,7 @@
 	} from '$lib/apis/chats';
 	import { chats } from '$lib/stores';
 	import { createMessagesList } from '$lib/utils';
-	import { downloadChatAsPDF } from '$lib/apis/utils';
+	import { downloadChatAsPDF, downloadChatAsWord } from '$lib/apis/utils';
 	import Download from '$lib/components/icons/Download.svelte';
 
 	const i18n = getContext('i18n');
@@ -92,6 +92,35 @@
 		const a = document.createElement('a');
 		a.href = url;
 		a.download = `chat-${chat.chat.title}.pdf`;
+
+		// Append the link to the body and click it programmatically
+		document.body.appendChild(a);
+		a.click();
+
+		// Remove the link from the body
+		document.body.removeChild(a);
+
+		// Revoke the URL to release memory
+		window.URL.revokeObjectURL(url);
+	};
+
+	const downloadWord = async () => {
+		const chat = await getChatById(localStorage.token, chatId);
+		if (!chat) {
+			return;
+		}
+
+		const history = chat.chat.history;
+		const messages = createMessagesList(history, history.currentId);
+		const blob = await downloadChatAsWord(chat.chat.title, messages);
+
+		// Create a URL for the blob
+		const url = window.URL.createObjectURL(blob);
+
+		// Create a link element to trigger the download
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = `chat-${chat.chat.title}.docx`;
 
 		// Append the link to the body and click it programmatically
 		document.body.appendChild(a);
@@ -232,6 +261,15 @@
 						}}
 					>
 						<div class="flex items-center line-clamp-1">{$i18n.t('PDF document (.pdf)')}</div>
+					</DropdownMenu.Item>
+
+					<DropdownMenu.Item
+						class="flex gap-2 items-center px-3 py-2 text-sm  cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md"
+						on:click={() => {
+							downloadWord();
+						}}
+					>
+						<div class="flex items-center line-clamp-1">{$i18n.t('Word document (.docx)')}</div>
 					</DropdownMenu.Item>
 				</DropdownMenu.SubContent>
 			</DropdownMenu.Sub>

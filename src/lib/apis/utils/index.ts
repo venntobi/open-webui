@@ -81,6 +81,32 @@ export const downloadChatAsPDF = async (title: string, messages: object[]) => {
 	return blob;
 };
 
+export const downloadChatAsWord = async (title: string, messages: object[]) => {
+	let error = null;
+
+	const blob = await fetch(`${WEBUI_API_BASE_URL}/utils/word`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			title: title,
+			messages: messages
+		})
+	})
+		.then(async (res) => {
+			if (!res.ok) throw await res.json();
+			return res.blob();
+		})
+		.catch((err) => {
+			console.log(err);
+			error = err;
+			return null;
+		});
+
+	return blob;
+};
+
 export const getHTMLFromMarkdown = async (md: string) => {
 	let error = null;
 

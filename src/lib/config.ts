@@ -1,1 +1,1 @@
-export const background_opacity = 40
+export const background_opacity = 30
