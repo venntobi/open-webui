@@ -6,6 +6,10 @@ from typing import Dict, Any, List
 from docx import Document
 from open_webui.models.chats import ChatTitleMessagesForm
 
+# TODO: Checken ob der Pfad immer geht bzw dass man es so löst, dass er immer geht
+# TODO: Für Kandidatenprofil soll nur die ausgewählte Nachricht verwendet werden, bei der das Word Icon gedrückt wird,
+# TODO Nicht der ganze Chatverlauf
+# ? Vielleicht aufsplitten -> Einmal für gesamten Chatverlauf, einmal für eine explizite Nachricht
 TEMPLATE_PATH = Path("backend/open_webui/static/templates/chat_template.docx")
 
 
@@ -45,6 +49,7 @@ class WordGenerator:
         Generate a Word document from a template and fill it with chat messages.
         """
         try:
+
             doc = Document(TEMPLATE_PATH)
 
             # Add Title
