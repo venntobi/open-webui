@@ -147,6 +147,76 @@
 		}
 	};
 
+	const downloadWord = () => {
+		// Erzeuge einfachen HTML-Inhalt, den Word (als .doc) öffnen kann
+		const header = `<html><head><meta charset="utf-8"></head><body>`;
+		const footer = `</body></html>`;
+		const sourceHTML = header + message.content + footer;
+
+		// Erstelle einen Blob im Word-Format
+		const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword' });
+		const url = URL.createObjectURL(blob);
+
+		// Erstelle einen temporären Link und klicke ihn automatisch
+		const downloadLink = document.createElement('a');
+		downloadLink.href = url;
+		downloadLink.download = `Kandidatenprofil.doc`;
+		document.body.appendChild(downloadLink);
+		downloadLink.click();
+
+		// Aufräumen: Link entfernen und URL freigeben
+		document.body.removeChild(downloadLink);
+		URL.revokeObjectURL(url);
+	};
+
+	// import { toast } from 'svelte-sonner';
+	import { saveAs } from 'file-saver';
+	import PizZip from 'pizzip';
+	import Docxtemplater from 'docxtemplater';
+
+	const downloadWordTemplate = async () => {
+		try {
+			// Die Vorlage aus dem static-Verzeichnis laden
+			const response = await fetch('Vorlage_Konzept.docx');
+			if (!response.ok) {
+				throw new Error('Vorlage konnte nicht geladen werden.');
+			}
+			const arrayBuffer = await response.arrayBuffer();
+
+			// Mit PizZip das DOCX (das intern ein ZIP-Archiv ist) öffnen
+			const zip = new PizZip(arrayBuffer);
+
+			// Mit docxtemplater die Vorlage verarbeiten
+			const doc = new Docxtemplater(zip, {
+				paragraphLoop: true,
+				linebreaks: true
+			});
+
+			// Daten für die Platzhalter setzen (z. B. {{message}} und {{username}})
+			doc.setData({
+				// username: 'Max Mustermann',
+				message: 'Dies ist der dynamisch eingefügte Nachrichteninhalt.'
+			});
+
+			// Die Vorlage rendern (Platzhalter ersetzen)
+			try {
+				doc.render();
+			} catch (error) {
+				console.error('Fehler beim Rendern des Dokuments:', error);
+				toast.error('Beim Generieren des Dokuments ist ein Fehler aufgetreten.');
+				return;
+			}
+
+			// Das finale Dokument als Blob generieren
+			const out = doc.getZip().generate({ type: 'blob' });
+			// Mit FileSaver den Download auslösen
+			saveAs(out, 'MeinDokument.docx');
+		} catch (err) {
+			console.error(err);
+			toast.error('Beim Erstellen der Word-Datei ist ein Fehler aufgetreten.');
+		}
+	};
+
 	const playAudio = (idx: number) => {
 		return new Promise<void>((res) => {
 			speakingIdx = idx;
@@ -837,6 +907,27 @@
 												stroke-linecap="round"
 												stroke-linejoin="round"
 												d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"
+											/>
+										</svg>
+									</button>
+								</Tooltip>
+
+								<Tooltip content={$i18n.t('Download as Word')} placement="bottom">
+									<button
+										class="{isLastMessage
+											? 'visible'
+											: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition"
+										on:click={() => downloadWord()}
+									>
+										<!-- Hier wird nun das Word-Logo von Font Awesome verwendet -->
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 384 512"
+											fill="currentColor"
+											class="w-4 h-4"
+										>
+											<path
+												d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-288-128 0c-17.7 0-32-14.3-32-32L224 0 64 0zM256 0l0 128 128 0L256 0zM111 257.1l26.8 89.2 31.6-90.3c3.4-9.6 12.5-16.1 22.7-16.1s19.3 6.4 22.7 16.1l31.6 90.3L273 257.1c3.8-12.7 17.2-19.9 29.9-16.1s19.9 17.2 16.1 29.9l-48 160c-3 10-12 16.9-22.4 17.1s-19.8-6.2-23.2-16.1L192 336.6l-33.3 95.3c-3.4 9.8-12.8 16.3-23.2 16.1s-19.5-7.1-22.4-17.1l-48-160c-3.8-12.7 3.4-26.1 16.1-29.9s26.1 3.4 29.9 16.1z"
 											/>
 										</svg>
 									</button>
