@@ -9,6 +9,7 @@ from open_webui.models.chats import ChatTitleMessagesForm
 # TODO: Checken ob der Pfad immer geht bzw dass man es so löst, dass er immer geht
 # TODO: Für Kandidatenprofil soll nur die ausgewählte Nachricht verwendet werden, bei der das Word Icon gedrückt wird,
 # TODO Nicht der ganze Chatverlauf
+# TODO: Name des Heruntergeladenen Dokuments anpassen: Schöne Namen, ohne emojis
 # ? Vielleicht aufsplitten -> Einmal für gesamten Chatverlauf, einmal für eine explizite Nachricht
 TEMPLATE_PATH = Path("backend/open_webui/static/templates/chat_template.docx")
 
