@@ -6,6 +6,8 @@ from typing import Dict, Any, List
 from docx import Document
 from open_webui.models.chats import ChatTitleMessagesForm
 
+TEMPLATE_PATH = Path("backend/open_webui/static/templates/chat_template.docx")
+
 
 class WordGenerator:
     """
@@ -40,10 +42,10 @@ class WordGenerator:
 
     def generate_chat_word(self) -> bytes:
         """
-        Generate a Word (.docx) file from chat messages.
+        Generate a Word document from a template and fill it with chat messages.
         """
         try:
-            doc = Document()
+            doc = Document(TEMPLATE_PATH)
 
             # Add Title
             doc.add_heading(self.form_data.title, level=1)
