@@ -45,7 +45,7 @@
 </script>
 
 <div class=" space-y-1 text-xs pb-safe-bottom">
-	<div>
+	<!-- <div>
 		<Tooltip
 			content={$i18n.t(
 				'When enabled, the model will respond to each chat message in real-time, generating a response as soon as the user sends a message. This mode is useful for live chat applications, but may impact performance on slower hardware.'
@@ -79,7 +79,7 @@
 				</button>
 			</div>
 		</Tooltip>
-	</div>
+	</div> -->
 
 	<div class=" py-0.5 w-full justify-between">
 		<Tooltip
@@ -126,7 +126,7 @@
 		{/if}
 	</div>
 
-	<div class=" py-0.5 w-full justify-between">
+	<!-- <div class=" py-0.5 w-full justify-between">
 		<Tooltip
 			content={$i18n.t(
 				'Sets the stop sequences to use. When this pattern is encountered, the LLM will stop generating text and return. Multiple stop patterns may be set by specifying multiple separate stop parameters in a modelfile.'
@@ -168,7 +168,7 @@
 				</div>
 			</div>
 		{/if}
-	</div>
+	</div> -->
 
 	<div class=" py-0.5 w-full justify-between">
 		<Tooltip
@@ -225,7 +225,7 @@
 		{/if}
 	</div>
 
-	<div class=" py-0.5 w-full justify-between">
+	<!-- <div class=" py-0.5 w-full justify-between">
 		<Tooltip
 			content={$i18n.t(
 				'Constrains effort on reasoning for reasoning models. Only applicable to reasoning models from specific providers that support reasoning effort. (Default: medium)'
@@ -266,9 +266,9 @@
 				</div>
 			</div>
 		{/if}
-	</div>
+	</div> -->
 
-	<div class=" py-0.5 w-full justify-between">
+	<!-- <div class=" py-0.5 w-full justify-between">
 		<Tooltip
 			content={$i18n.t(
 				'Enable Mirostat sampling for controlling perplexity. (Default: 0, 0 = Disabled, 1 = Mirostat, 2 = Mirostat 2.0)'
@@ -321,9 +321,9 @@
 				</div>
 			</div>
 		{/if}
-	</div>
+	</div> -->
 
-	<div class=" py-0.5 w-full justify-between">
+	<!-- <div class=" py-0.5 w-full justify-between">
 		<Tooltip
 			content={$i18n.t(
 				'Influences how quickly the algorithm responds to feedback from the generated text. A lower learning rate will result in slower adjustments, while a higher learning rate will make the algorithm more responsive. (Default: 0.1)'
@@ -376,9 +376,9 @@
 				</div>
 			</div>
 		{/if}
-	</div>
+	</div> -->
 
-	<div class=" py-0.5 w-full justify-between">
+	<!-- <div class=" py-0.5 w-full justify-between">
 		<Tooltip
 			content={$i18n.t(
 				'Controls the balance between coherence and diversity of the output. A lower value will result in more focused and coherent text. (Default: 5.0)'
@@ -432,7 +432,7 @@
 				</div>
 			</div>
 		{/if}
-	</div>
+	</div> -->
 
 	<div class=" py-0.5 w-full justify-between">
 		<Tooltip
@@ -545,7 +545,7 @@
 		{/if}
 	</div>
 
-	<div class=" py-0.5 w-full justify-between">
+	<!-- <div class=" py-0.5 w-full justify-between">
 		<Tooltip
 			content={$i18n.t(
 				'Alternative to the top_p, and aims to ensure a balance of quality and variety. The parameter p represents the minimum probability for a token to be considered, relative to the probability of the most likely token. For example, with p=0.05 and the most likely token having a probability of 0.9, logits with a value less than 0.045 are filtered out. (Default: 0.0)'
@@ -598,7 +598,7 @@
 				</div>
 			</div>
 		{/if}
-	</div>
+	</div> -->
 
 	<div class=" py-0.5 w-full justify-between">
 		<Tooltip
@@ -656,7 +656,7 @@
 		{/if}
 	</div>
 
-	<div class=" py-0.5 w-full justify-between">
+	<!-- <div class=" py-0.5 w-full justify-between">
 		<Tooltip
 			content={$i18n.t(
 				'Sets how far back for the model to look back to prevent repetition. (Default: 64, 0 = disabled, -1 = num_ctx)'
@@ -710,9 +710,9 @@
 				</div>
 			</div>
 		{/if}
-	</div>
+	</div> -->
 
-	<div class=" py-0.5 w-full justify-between">
+	<!-- <div class=" py-0.5 w-full justify-between">
 		<Tooltip
 			content={$i18n.t(
 				'Tail free sampling is used to reduce the impact of less probable tokens from the output. A higher value (e.g., 2.0) will reduce the impact more, while a value of 1.0 disables this setting. (default: 1)'
@@ -766,7 +766,7 @@
 				</div>
 			</div>
 		{/if}
-	</div>
+	</div> -->
 
 	<div class=" py-0.5 w-full justify-between">
 		<Tooltip
@@ -823,7 +823,7 @@
 		{/if}
 	</div>
 
-	<div class=" py-0.5 w-full justify-between">
+	<!-- <div class=" py-0.5 w-full justify-between">
 		<Tooltip
 			content={$i18n.t(
 				'The batch size determines how many text requests are processed together at once. A higher batch size can increase the performance and speed of the model, but it also requires more memory.  (Default: 512)'
@@ -876,9 +876,9 @@
 				</div>
 			</div>
 		{/if}
-	</div>
+	</div> -->
 
-	<div class=" py-0.5 w-full justify-between">
+	<!-- <div class=" py-0.5 w-full justify-between">
 		<Tooltip
 			content={$i18n.t(
 				'This option controls how many tokens are preserved when refreshing the context. For example, if set to 2, the last 2 tokens of the conversation context will be retained. Preserving context can help maintain the continuity of a conversation, but it may reduce the ability to respond to new topics. (Default: 24)'
@@ -931,7 +931,7 @@
 				</div>
 			</div>
 		{/if}
-	</div>
+	</div> -->
 
 	<div class=" py-0.5 w-full justify-between">
 		<Tooltip
@@ -988,7 +988,7 @@
 		{/if}
 	</div>
 
-	{#if admin}
+	<!-- {#if admin}
 		<div class=" py-0.5 w-full justify-between">
 			<Tooltip
 				content={$i18n.t(
@@ -1181,9 +1181,9 @@
 					</div>
 				</div>
 			{/if}
-		</div>
+		</div> -->
 
-		<!-- <div class=" py-0.5 w-full justify-between">
+	<!-- <div class=" py-0.5 w-full justify-between">
 			<div class="flex w-full justify-between">
 				<div class=" self-center text-xs font-medium">{$i18n.t('Template')}</div>
 
@@ -1215,5 +1215,5 @@
 				</div>
 			{/if}
 		</div> -->
-	{/if}
+	<!-- {/if} -->
 </div>
