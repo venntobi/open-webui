@@ -41,6 +41,7 @@
 	import { createNewFeedback, getFeedbackById, updateFeedbackById } from '$lib/apis/evaluations';
 	import { getChatById } from '$lib/apis/chats';
 	import { generateTags } from '$lib/apis';
+	import { downloadChatAsWord } from '$lib/apis/utils';
 
 	interface MessageType {
 		id: string;
@@ -147,74 +148,33 @@
 		}
 	};
 
-	const downloadWord = () => {
-		// Erzeuge einfachen HTML-Inhalt, den Word (als .doc) öffnen kann
-		const header = `<html><head><meta charset="utf-8"></head><body>`;
-		const footer = `</body></html>`;
-		const sourceHTML = header + message.content + footer;
-
-		// Erstelle einen Blob im Word-Format
-		const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword' });
-		const url = URL.createObjectURL(blob);
-
-		// Erstelle einen temporären Link und klicke ihn automatisch
-		const downloadLink = document.createElement('a');
-		downloadLink.href = url;
-		downloadLink.download = `Kandidatenprofil.doc`;
-		document.body.appendChild(downloadLink);
-		downloadLink.click();
-
-		// Aufräumen: Link entfernen und URL freigeben
-		document.body.removeChild(downloadLink);
-		URL.revokeObjectURL(url);
-	};
-
-	// import { toast } from 'svelte-sonner';
-	import { saveAs } from 'file-saver';
-	import PizZip from 'pizzip';
-	import Docxtemplater from 'docxtemplater';
-
-	const downloadWordTemplate = async () => {
-		try {
-			// Die Vorlage aus dem static-Verzeichnis laden
-			const response = await fetch('Vorlage_Konzept.docx');
-			if (!response.ok) {
-				throw new Error('Vorlage konnte nicht geladen werden.');
-			}
-			const arrayBuffer = await response.arrayBuffer();
-
-			// Mit PizZip das DOCX (das intern ein ZIP-Archiv ist) öffnen
-			const zip = new PizZip(arrayBuffer);
-
-			// Mit docxtemplater die Vorlage verarbeiten
-			const doc = new Docxtemplater(zip, {
-				paragraphLoop: true,
-				linebreaks: true
-			});
-
-			// Daten für die Platzhalter setzen (z. B. {{message}} und {{username}})
-			doc.setData({
-				// username: 'Max Mustermann',
-				message: 'Dies ist der dynamisch eingefügte Nachrichteninhalt.'
-			});
-
-			// Die Vorlage rendern (Platzhalter ersetzen)
-			try {
-				doc.render();
-			} catch (error) {
-				console.error('Fehler beim Rendern des Dokuments:', error);
-				toast.error('Beim Generieren des Dokuments ist ein Fehler aufgetreten.');
-				return;
-			}
-
-			// Das finale Dokument als Blob generieren
-			const out = doc.getZip().generate({ type: 'blob' });
-			// Mit FileSaver den Download auslösen
-			saveAs(out, 'MeinDokument.docx');
-		} catch (err) {
-			console.error(err);
-			toast.error('Beim Erstellen der Word-Datei ist ein Fehler aufgetreten.');
+	const downloadWord = async () => {
+		const chat = await getChatById(localStorage.token, chatId);
+		if (!chat) {
+			return;
 		}
+
+		const history = chat.chat.history;
+		const messages = createMessagesList(history, history.currentId);
+		const blob = await downloadChatAsWord(chat.chat.title, messages);
+
+		// Create a URL for the blob
+		const url = window.URL.createObjectURL(blob);
+
+		// Create a link element to trigger the download
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = `chat-${chat.chat.title}.docx`;
+
+		// Append the link to the body and click it programmatically
+		document.body.appendChild(a);
+		a.click();
+
+		// Remove the link from the body
+		document.body.removeChild(a);
+
+		// Revoke the URL to release memory
+		window.URL.revokeObjectURL(url);
 	};
 
 	const playAudio = (idx: number) => {
