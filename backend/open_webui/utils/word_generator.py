@@ -11,7 +11,7 @@ from open_webui.models.chats import ChatTitleMessagesForm
 # TODO Nicht der ganze Chatverlauf
 # TODO: Name des Heruntergeladenen Dokuments anpassen: Schöne Namen, ohne emojis
 # ? Vielleicht aufsplitten -> Einmal für gesamten Chatverlauf, einmal für eine explizite Nachricht
-TEMPLATE_PATH = Path("backend/open_webui/static/templates/chat_template.docx")
+TEMPLATE_PATH = Path("backend/open_webui/static/templates/candidate_template.docx")
 
 
 class WordGenerator:
@@ -57,9 +57,7 @@ class WordGenerator:
             doc.add_heading(self.form_data.title, level=1)
 
             # Add Messages
-            print(self.form_data.messages)
             for msg in self.form_data.messages:
-                print(msg)
                 doc.add_paragraph(self._build_message_text(msg))
                 doc.add_paragraph("-" * 40)  # Separator
 

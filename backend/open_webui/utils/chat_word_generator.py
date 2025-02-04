@@ -7,7 +7,7 @@ from docx import Document
 from open_webui.models.chats import ChatTitleMessagesForm
 
 
-TEMPLATE_PATH = Path("backend/open_webui/static/templates/chat_template.docx")
+TEMPLATE_PATH = Path("backend/open_webui/static/templates/candidate_template.docx")
 
 
 class ChatWordGenerator:

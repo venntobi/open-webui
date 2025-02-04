@@ -170,7 +170,7 @@
 		// Create a link element to trigger the download
 		const a = document.createElement('a');
 		a.href = url;
-		a.download = `chat-${chat.chat.title}.docx`;
+		a.download = `${titleClean}.docx`;
 
 		// Append the link to the body and click it programmatically
 		document.body.appendChild(a);
