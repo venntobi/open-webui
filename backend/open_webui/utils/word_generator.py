@@ -57,7 +57,9 @@ class WordGenerator:
             doc.add_heading(self.form_data.title, level=1)
 
             # Add Messages
+            print(self.form_data.messages)
             for msg in self.form_data.messages:
+                print(msg)
                 doc.add_paragraph(self._build_message_text(msg))
                 doc.add_paragraph("-" * 40)  # Separator
 

@@ -141,6 +141,10 @@
 
 	let showRateComment = false;
 
+	function removeEmojis(text: string): string {
+		return text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F]/gu, '').trim();
+	}
+
 	const copyToClipboard = async (text) => {
 		const res = await _copyToClipboard(text);
 		if (res) {
@@ -148,15 +152,17 @@
 		}
 	};
 
-	const downloadWord = async () => {
+	const downloadWord = async (messageId) => {
 		const chat = await getChatById(localStorage.token, chatId);
 		if (!chat) {
 			return;
 		}
 
+		const titleClean = removeEmojis(chat.chat.title);
 		const history = chat.chat.history;
 		const messages = createMessagesList(history, history.currentId);
-		const blob = await downloadChatAsWord(chat.chat.title, messages);
+		const selectedMessage = messages.filter((msg) => msg.id === messageId);
+		const blob = await downloadChatAsWord(titleClean, selectedMessage);
 
 		// Create a URL for the blob
 		const url = window.URL.createObjectURL(blob);
@@ -877,7 +883,7 @@
 										class="{isLastMessage
 											? 'visible'
 											: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition"
-										on:click={() => downloadWord()}
+										on:click={() => downloadWord(message.id)}
 									>
 										<!-- Hier wird nun das Word-Logo von Font Awesome verwendet -->
 										<svg

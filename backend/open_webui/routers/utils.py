@@ -1,7 +1,7 @@
 import black
 import markdown
 
-from open_webui.models.chats import ChatTitleMessagesForm
+from open_webui.models.chats import ChatTitleMessagesForm, ChatResponse
 from open_webui.config import DATA_DIR, ENABLE_ADMIN_EXPORT
 from open_webui.constants import ERROR_MESSAGES
 from fastapi import APIRouter, Depends, HTTPException, Response, status
@@ -10,6 +10,7 @@ from starlette.responses import FileResponse
 from open_webui.utils.misc import get_gravatar_url
 from open_webui.utils.pdf_generator import PDFGenerator
 from open_webui.utils.word_generator import WordGenerator
+from open_webui.utils.chat_word_generator import ChatWordGenerator
 from open_webui.utils.auth import get_admin_user
 
 router = APIRouter()
@@ -71,11 +72,28 @@ async def download_chat_as_pdf(
 
 
 @router.post("/word")
-async def download_chat_as_word(
+async def download_as_word(
     form_data: ChatTitleMessagesForm,
 ):
     try:
         word_bytes = WordGenerator(form_data).generate_chat_word()
+
+        return Response(
+            content=word_bytes,
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            headers={"Content-Disposition": "attachment;filename=chat.docx"},
+        )
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/chat_word")
+async def download_chat_as_word(
+    form_data: ChatTitleMessagesForm,
+):
+    try:
+        word_bytes = ChatWordGenerator(form_data).generate_chat_word()
 
         return Response(
             content=word_bytes,

@@ -25,7 +25,7 @@
 	} from '$lib/apis/chats';
 	import { chats } from '$lib/stores';
 	import { createMessagesList } from '$lib/utils';
-	import { downloadChatAsPDF, downloadChatAsWord } from '$lib/apis/utils';
+	import { downloadChatAsPDF, downloadAsWord } from '$lib/apis/utils';
 	import Download from '$lib/components/icons/Download.svelte';
 
 	const i18n = getContext('i18n');
@@ -41,6 +41,10 @@
 
 	let show = false;
 	let pinned = false;
+
+	function removeEmojis(text: string): string {
+		return text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F]/gu, '').trim();
+	}
 
 	const pinHandler = async () => {
 		await toggleChatPinnedStatusById(localStorage.token, chatId);
@@ -110,9 +114,10 @@
 			return;
 		}
 
+		const titleClean = removeEmojis(chat.chat.title);
 		const history = chat.chat.history;
 		const messages = createMessagesList(history, history.currentId);
-		const blob = await downloadChatAsWord(chat.chat.title, messages);
+		const blob = await downloadAsWord(titleClean, messages);
 
 		// Create a URL for the blob
 		const url = window.URL.createObjectURL(blob);
@@ -120,7 +125,7 @@
 		// Create a link element to trigger the download
 		const a = document.createElement('a');
 		a.href = url;
-		a.download = `chat-${chat.chat.title}.docx`;
+		a.download = `${titleClean}.docx`;
 
 		// Append the link to the body and click it programmatically
 		document.body.appendChild(a);
