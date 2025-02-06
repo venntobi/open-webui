@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Dict, Any, List
 from docx import Document
 from docx.shared import Cm
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from open_webui.models.chats import ChatTitleMessagesForm
 
 TEMPLATE_PATH = Path("backend/open_webui/static/templates/Vorlage Kandidatenprofil_Farina.docx")
@@ -24,6 +25,7 @@ class ChatWordGenerator:
     def _extract_key_value_pairs(self, messages: List[Dict[str, Any]]) -> Dict[str, str]:
         """
         Extract key-value pairs from the messages where keys are bolded (e.g., **Kandidat**).
+        Handles multi-line values by preserving line breaks and stopping at the next key.
 
         Args:
         - `messages`: List of message dictionaries containing 'content'.
@@ -41,19 +43,23 @@ class ChatWordGenerator:
                 if line.startswith("**") and line.endswith(":**"):
                     # Extract the key
                     key = line.strip("**:").strip()
-                    # Find the next non-empty line as the value
-                    value = ""
+                    # Find the next non-empty line(s) as the value
+                    value_lines = []
                     j = i + 1
-                    while j < len(lines) and not lines[j].strip():
+                    while j < len(lines):
+                        next_line = lines[j].strip()
+                        if next_line.startswith("**") and next_line.endswith(":**"):
+                            break  # Stop if a new key is encountered
+                        if next_line != "":
+                            value_lines.append(next_line)
                         j += 1
-                    if j < len(lines):
-                        value = lines[j].strip()
+                    # Combine the value lines with line breaks preserved
+                    value = "\n".join(value_lines)
                     # Add the key-value pair to the dictionary
                     key_value_pairs[key] = value
                     i = j  # Skip to the next line after the value
                 else:
                     i += 1  # Move to the next line
-
         return key_value_pairs
 
     def _replace_placeholders_in_document(self, doc: Document, replacements: Dict[str, str]):
@@ -64,12 +70,17 @@ class ChatWordGenerator:
         - `doc`: The Document object to modify.
         - `replacements`: A dictionary mapping placeholder keys to their replacement values.
         """
+        center_aligned_placeholders = {"Unternehmen", "Position"}
+
         for paragraph in doc.paragraphs:
             for key, value in replacements.items():
                 placeholder = f"{{{{{key}}}}}"
                 if placeholder in paragraph.text:
                     paragraph.text = paragraph.text.replace(placeholder, value)
-                    paragraph.alignment = 0
+                    if key in center_aligned_placeholders:
+                        paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+                    else:
+                        paragraph.alignment = 0
 
         foto_placeholder = "{{FOTO}}"
         foto_path = Path("backend/open_webui/static/templates/Bewerbungsfoto.png")
