@@ -70,33 +70,120 @@ class ChatWordGenerator:
         - `replacements`: A dictionary mapping placeholder keys to their replacement values.
         """
         center_aligned_placeholders = {"UNTERNEHMEN", "POSITION"}
+        bold_placeholders = {"KANDIDAT", "AKTUELLE POSITION"}
+        background_placeholders = {
+            "BERUFLICHER WERDEGANG",
+            "TÄTIGKEITEN WÄHREND DES STUDIUMS",
+            "AKADEMISCHE AUSBILDUNG",
+            "BERUFSAUSBILDUNG",
+            "ZIVILDIENST",
+            "SCHULISCHE AUSBILDUNG",
+        }
+
+        def format_background(value):
+            """Format the value of  background."""
+            if re.match(r"^\d", value):  # First letter is a number
+                lines = value.split("\n")
+                formatted_lines = []
+                for line in lines:
+                    if re.match(r"^\d", line):  # First letter is a number
+                        match = re.match(r"^([\d/]+(?:\s*-\s*(?:[\d/]+|heute))?)\s*(.*)", line)
+                        if match:
+                            line_1 = match.group(1)
+                            line_2 = match.group(2)
+                        formatted_line = line_1.strip() + "\t\t" + line_2.strip()
+                        formatted_lines.append(formatted_line)
+                    else:
+                        if len(line) < 65:
+                            if line.strip().startswith("•"):
+                                formatted_line = "\t\t\t\t           " + line[1:].strip()
+                                formatted_lines.append(formatted_line)
+                            else:
+                                formatted_line = "\t\t\t\t" + line.strip()
+                                formatted_lines.append(formatted_line)
+                        if len(line) > 65 and len(line) < 130:
+                            if line.strip().startswith("•"):
+                                formatted_line_1 = "\t\t\t\t           " + line[1:65].strip() + "-"
+                                formatted_line_2 = "\t\t\t\t           " + line[65:].strip()
+                                formatted_lines.append(formatted_line_1)
+                                formatted_lines.append(formatted_line_2)
+                            else:
+                                formatted_line_1 = "\t\t\t\t" + line.strip()[:65].strip() + "-"
+                                formatted_line_2 = "\t\t\t\t" + line.strip()[65:].strip()
+                                formatted_lines.append(formatted_line_1)
+                                formatted_lines.append(formatted_line_2)
+                        if len(line) > 130:
+                            formatted_line_1 = "\t\t\t\t" + line.strip()[:65].strip() + "-"
+                            formatted_line_2 = "\t\t\t\t" + line.strip()[65:130].strip() + "-"
+                            formatted_line_3 = "\t\t\t\t" + line.strip()[130:].strip()
+                            formatted_lines.append(formatted_line_1)
+                            formatted_lines.append(formatted_line_2)
+                            formatted_lines.append(formatted_line_3)
+                return "\n".join(formatted_lines)
+            else:
+                return value
 
         def format_bullet_points(value):
             """Format the value to replace placeholders with proper bullet points and indentation."""
             lines = value.split("\n")
             formatted_lines = []
             for line in lines:
-                if line.strip().startswith("·") or line.strip().startswith("•"):
-                    if len(line) > 100:
+                if line.strip().startswith("•"):
+                    if len(line) < 100:
+                        formatted_line = "        •  " + line[1:].strip()
+                        formatted_lines.append(formatted_line)
+                    if len(line) > 100 and len(line) < 180:
                         formatted_line_1 = "        •  " + line.strip()[1:90].strip() + "-"
                         formatted_line_2 = "           " + line.strip()[90:].strip()
                         formatted_lines.append(formatted_line_1)
                         formatted_lines.append(formatted_line_2)
-                elif line.strip().startswith("o"):
-                    formatted_line_1 = "\t       ◦  " + line.strip()[1:80].strip() + "-"
-                    formatted_line_2 = "\t          " + line.strip()[80:].strip()
-                    formatted_lines.append(formatted_line_1)
-                    formatted_lines.append(formatted_line_2)
+                    elif len(line) > 180:
+                        formatted_line_1 = "        •  " + line.strip()[1:90].strip() + "-"
+                        formatted_line_2 = "           " + line.strip()[90:180].strip() + "-"
+                        formatted_line_3 = "           " + line.strip()[180:].strip()
+                        formatted_lines.append(formatted_line_1)
+                        formatted_lines.append(formatted_line_2)
+                        formatted_lines.append(formatted_line_3)
+                elif line.strip().startswith("◦"):
+                    if len(line) < 90:
+                        formatted_line = "\t       ◦  " + line[1:].strip()
+                        formatted_lines.append(formatted_line)
+                    if len(line) > 90 and len(line) < 160:
+                        formatted_line_1 = "\t       ◦  " + line.strip()[1:80].strip() + "-"
+                        formatted_line_2 = "\t          " + line.strip()[80:].strip()
+                        formatted_lines.append(formatted_line_1)
+                        formatted_lines.append(formatted_line_2)
+                    elif len(line) > 160:
+                        formatted_line_1 = "\t       ◦  " + line.strip()[1:80].strip() + "-"
+                        formatted_line_2 = "\t          " + line.strip()[80:160].strip() + "-"
+                        formatted_line_3 = "\t          " + line.strip()[160:].strip()
+                        formatted_lines.append(formatted_line_1)
+                        formatted_lines.append(formatted_line_2)
+                        formatted_lines.append(formatted_line_3)
                 else:
                     formatted_lines.append(line)
             return "\n".join(formatted_lines)
 
         for paragraph in doc.paragraphs:
             for key, value in replacements.items():
+                formatted_value = format_bullet_points(value)
+                if key in background_placeholders:
+                    formatted_value = format_background(formatted_value)
                 placeholder = f"{{{{{key}}}}}"
                 if placeholder in paragraph.text:
-                    formatted_value = format_bullet_points(value)
                     paragraph.text = paragraph.text.replace(placeholder, formatted_value)
+                    if key in background_placeholders:
+                        if re.match(r"^\d", value):
+                            paragraph_text = paragraph.text.strip()
+                            lines = paragraph_text.split("\n")
+                            if lines:
+                                paragraph.clear()
+                                # Add first line with bold formatting
+                                first_run = paragraph.add_run(lines[0] + "\n")
+                                first_run.bold = True
+                                # Add the rest of the paragraph without bold
+                                for line in lines[1:]:
+                                    paragraph.add_run(line + "\n")
                     if key in center_aligned_placeholders:
                         paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
                         for run in paragraph.runs:
@@ -122,9 +209,17 @@ class ChatWordGenerator:
                             cell.text = cell.text.replace(placeholder, value)
                             for paragraph in cell.paragraphs:
                                 paragraph.alignment = 0
-                                for run in paragraph.runs:
-                                    run.font.name = "Arial"
-                                    run.font.size = Pt(10)
+                                if key in bold_placeholders:
+                                    for run in paragraph.runs:
+                                        if value in run.text:
+                                            run.text = run.text.replace(value, "")
+                                            new_run = paragraph.add_run(value)
+                                            new_run.bold = True
+                                            new_run.font.name = "Arial"
+                                            new_run.font.size = Pt(10)
+                                        else:
+                                            run.font.name = "Arial"
+                                            run.font.size = Pt(10)
 
                     if foto_placeholder in cell.text:
                         for paragraph in cell.paragraphs:
