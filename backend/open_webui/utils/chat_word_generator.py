@@ -5,11 +5,8 @@ import re
 from docx import Document
 from docx.shared import Cm
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
-from docx.shared import Pt, Inches
+from docx.shared import Pt
 from open_webui.models.chats import ChatTitleMessagesForm
-
-# from open_webui.routers.knowledge import get_knowledge_by_id
-TEMPLATE_PATH = Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Farina.docx"
 
 
 class ChatWordGenerator:
@@ -27,7 +24,7 @@ class ChatWordGenerator:
 
     def _extract_key_value_pairs(self, messages: List[Dict[str, Any]]) -> Dict[str, str]:
         """
-        Extract key-value pairs from the messages where keys are bolded (e.g., **Kandidat**).
+        Extract key-value pairs from the messages where keys are capitalized (e.g., KANDIDAT).
         Handles multi-line values by preserving line breaks and stopping at the next key.
 
         Args:
@@ -60,6 +57,55 @@ class ChatWordGenerator:
                 else:
                     i += 1
         return key_value_pairs
+
+    def _extract_contact_person_value(self, key_value_pairs: Dict[str, str]):
+        """
+        Extract contact person by extracting the value of the key "Ansprechpartner".
+
+        Args:
+        - `key_value_pairs`: dictionary containing the key value pairs.
+
+        Returns:
+        - A path of the document template as string.
+        """
+        for key, value in key_value_pairs.items():
+            if key == "ANSPRECHPARTNER":
+                if "Farina" in value:
+                    path = (
+                        Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Farina.docx"
+                    )
+                elif "Zoe" in value:
+                    path = Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Zoe.docx"
+                elif "Yasemin" in value:
+                    path = (
+                        Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Yasemin.docx"
+                    )
+                elif "Viktoria" in value:
+                    path = (
+                        Path(__file__).parent.parent
+                        / "static"
+                        / "templates"
+                        / "Vorlage Kandidatenprofil_Viktoria.docx"
+                    )
+                elif "Tina" in value:
+                    path = Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Tina.docx"
+                elif "Stephan" in value:
+                    path = (
+                        Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Stephan.docx"
+                    )
+                elif "Maike" in value:
+                    path = (
+                        Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Maike.docx"
+                    )
+                elif "Lucas" in value:
+                    path = (
+                        Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Lucas.docx"
+                    )
+                elif "Fynn" in value:
+                    path = Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Fynn.docx"
+                else:
+                    path = Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Kaan.docx"
+        return path
 
     def _replace_placeholders_in_document(self, doc: Document, replacements: Dict[str, str]):
         """
@@ -104,7 +150,7 @@ class ChatWordGenerator:
                         if len(line) > 70 and len(line) < 140:
                             if line.strip().startswith("•"):
                                 formatted_line_1 = "\t\t\t\t           " + line[1:70].strip() + "-"
-                                formatted_line_2 = "\t\t\t\t           " + line[70:].strip()
+                                formatted_line_2 = "\t\t\t\t              " + line[70:].strip()
                                 formatted_lines.append(formatted_line_1)
                                 formatted_lines.append(formatted_line_2)
                             else:
@@ -119,7 +165,7 @@ class ChatWordGenerator:
                             formatted_lines.append(formatted_line_1)
                             formatted_lines.append(formatted_line_2)
                             formatted_lines.append(formatted_line_3)
-                        if len(line) > 210:
+                        if len(line) > 210 and len(line) < 280:
                             formatted_line_1 = "\t\t\t\t" + line.strip()[:70].strip() + "-"
                             formatted_line_2 = "\t\t\t\t" + line.strip()[70:140].strip() + "-"
                             formatted_line_3 = "\t\t\t\t" + line.strip()[140:210].strip() + "-"
@@ -128,6 +174,17 @@ class ChatWordGenerator:
                             formatted_lines.append(formatted_line_2)
                             formatted_lines.append(formatted_line_3)
                             formatted_lines.append(formatted_line_4)
+                        if len(line) > 280:
+                            formatted_line_1 = "\t\t\t\t" + line.strip()[:70].strip() + "-"
+                            formatted_line_2 = "\t\t\t\t" + line.strip()[70:140].strip() + "-"
+                            formatted_line_3 = "\t\t\t\t" + line.strip()[140:210].strip() + "-"
+                            formatted_line_4 = "\t\t\t\t" + line.strip()[210:280].strip() + "-"
+                            formatted_line_5 = "\t\t\t\t" + line.strip()[280:].strip()
+                            formatted_lines.append(formatted_line_1)
+                            formatted_lines.append(formatted_line_2)
+                            formatted_lines.append(formatted_line_3)
+                            formatted_lines.append(formatted_line_4)
+                            formatted_lines.append(formatted_line_5)
                 return "\n".join(formatted_lines)
             else:
                 return value
@@ -200,6 +257,7 @@ class ChatWordGenerator:
                             run.font.size = Pt(12)
                     else:
                         paragraph.alignment = 0
+                        paragraph.paragraph_format.line_spacing = 1.15
                         for run in paragraph.runs:
                             run.font.name = "Arial"
                             run.font.size = Pt(10)
@@ -263,11 +321,14 @@ class ChatWordGenerator:
         - The generated Word document as bytes.
         """
         try:
-            # Load the template document
-            doc = Document(TEMPLATE_PATH)
-
             # Extract key-value pairs from the messages
             key_value_pairs = self._extract_key_value_pairs(self.form_data.messages)
+
+            # Extract contact person from the messages
+            path = self._extract_contact_person_value(key_value_pairs)
+
+            # Load the template document
+            doc = Document(path)
 
             # Replace placeholders in the document
             self._replace_placeholders_in_document(doc, key_value_pairs)
