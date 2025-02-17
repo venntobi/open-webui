@@ -91,34 +91,43 @@ class ChatWordGenerator:
                         if match:
                             line_1 = match.group(1)
                             line_2 = match.group(2)
-                        formatted_line = line_1.strip() + "\t\t" + line_2.strip()
+                        formatted_line = line_1.strip() + "\t\t\t" + line_2.strip()
                         formatted_lines.append(formatted_line)
                     else:
-                        if len(line) < 65:
+                        if len(line) < 70:
                             if line.strip().startswith("•"):
                                 formatted_line = "\t\t\t\t           " + line[1:].strip()
                                 formatted_lines.append(formatted_line)
                             else:
                                 formatted_line = "\t\t\t\t" + line.strip()
                                 formatted_lines.append(formatted_line)
-                        if len(line) > 65 and len(line) < 130:
+                        if len(line) > 70 and len(line) < 140:
                             if line.strip().startswith("•"):
-                                formatted_line_1 = "\t\t\t\t           " + line[1:65].strip() + "-"
-                                formatted_line_2 = "\t\t\t\t           " + line[65:].strip()
+                                formatted_line_1 = "\t\t\t\t           " + line[1:70].strip() + "-"
+                                formatted_line_2 = "\t\t\t\t           " + line[70:].strip()
                                 formatted_lines.append(formatted_line_1)
                                 formatted_lines.append(formatted_line_2)
                             else:
-                                formatted_line_1 = "\t\t\t\t" + line.strip()[:65].strip() + "-"
-                                formatted_line_2 = "\t\t\t\t" + line.strip()[65:].strip()
+                                formatted_line_1 = "\t\t\t\t" + line.strip()[:70].strip() + "-"
+                                formatted_line_2 = "\t\t\t\t" + line.strip()[70:].strip()
                                 formatted_lines.append(formatted_line_1)
                                 formatted_lines.append(formatted_line_2)
-                        if len(line) > 130:
-                            formatted_line_1 = "\t\t\t\t" + line.strip()[:65].strip() + "-"
-                            formatted_line_2 = "\t\t\t\t" + line.strip()[65:130].strip() + "-"
-                            formatted_line_3 = "\t\t\t\t" + line.strip()[130:].strip()
+                        if len(line) > 140 and len(line) < 210:
+                            formatted_line_1 = "\t\t\t\t" + line.strip()[:70].strip() + "-"
+                            formatted_line_2 = "\t\t\t\t" + line.strip()[70:140].strip() + "-"
+                            formatted_line_3 = "\t\t\t\t" + line.strip()[140:].strip()
                             formatted_lines.append(formatted_line_1)
                             formatted_lines.append(formatted_line_2)
                             formatted_lines.append(formatted_line_3)
+                        if len(line) > 210:
+                            formatted_line_1 = "\t\t\t\t" + line.strip()[:70].strip() + "-"
+                            formatted_line_2 = "\t\t\t\t" + line.strip()[70:140].strip() + "-"
+                            formatted_line_3 = "\t\t\t\t" + line.strip()[140:210].strip() + "-"
+                            formatted_line_4 = "\t\t\t\t" + line.strip()[210:].strip()
+                            formatted_lines.append(formatted_line_1)
+                            formatted_lines.append(formatted_line_2)
+                            formatted_lines.append(formatted_line_3)
+                            formatted_lines.append(formatted_line_4)
                 return "\n".join(formatted_lines)
             else:
                 return value
