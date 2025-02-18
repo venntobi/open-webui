@@ -16,6 +16,9 @@ __pycache__/
 # C extensions
 *.so
 
+#Nur verfübergehen das main.py blockieren
+/backend/main.py
+
 # Pyodide distribution
 static/pyodide/*
 !static/pyodide/pyodide-lock.json

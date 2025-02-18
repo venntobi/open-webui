@@ -45,7 +45,7 @@
 </script>
 
 <div class=" space-y-1 text-xs pb-safe-bottom">
-	<!-- <div>
+	<div>
 		<Tooltip
 			content={$i18n.t(
 				'When enabled, the model will respond to each chat message in real-time, generating a response as soon as the user sends a message. This mode is useful for live chat applications, but may impact performance on slower hardware.'
@@ -79,7 +79,7 @@
 				</button>
 			</div>
 		</Tooltip>
-	</div> -->
+	</div>
 
 	<div class=" py-0.5 w-full justify-between">
 		<Tooltip

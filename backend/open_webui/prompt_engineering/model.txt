@@ -1,0 +1,1 @@
+Das json von dem Modell liegt hier im Repo. Modell o1, context-länge leicht raufgesetzt, ansonsten Standard-Einstellungen.
