@@ -4,6 +4,8 @@ from utils import customize_images
 # TODO Tabnamen hierüber setzen
 # TODO: Functions hierüber setzen
 
+# * Functions vermutlich am besten über Endpunkt integrieren?
+
 RUN_SCRIPTS = {"customize_images": True}
 
 
