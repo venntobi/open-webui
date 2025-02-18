@@ -137,7 +137,7 @@
 
 				<div
 					class=" text-3xl sm:text-4xl leading-none line-clamp-1 self-end"
-					style="font-family: 'Ermilov Bold', sans-serif"
+					style="font-family: 'Ermilov Bold'"
 					in:fade={{ duration: 100 }}
 				>
 					{#if models[selectedModelIdx]?.name}

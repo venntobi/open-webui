@@ -24,8 +24,7 @@
 
 @font-face {
 	font-family: 'Ermilov Bold';
-	src: url('/path-to-font/ermilov-bold.woff2') format('woff2'),
-		url('/path-to-font/ermilov-bold.woff') format('woff');
+	src: url('/assets/fonts/Ermilov-bold.otf');
 	font-weight: bold;
 	font-style: normal;
 }
