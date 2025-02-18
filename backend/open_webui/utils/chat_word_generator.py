@@ -8,6 +8,8 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.shared import Pt
 from open_webui.models.chats import ChatTitleMessagesForm
 
+TEMPLATE_PATH = Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Kaan.docx"
+
 
 class ChatWordGenerator:
     """
@@ -58,55 +60,6 @@ class ChatWordGenerator:
                     i += 1
         return key_value_pairs
 
-    def _extract_contact_person_value(self, key_value_pairs: Dict[str, str]):
-        """
-        Extract contact person by extracting the value of the key "Ansprechpartner".
-
-        Args:
-        - `key_value_pairs`: dictionary containing the key value pairs.
-
-        Returns:
-        - A path of the document template as string.
-        """
-        for key, value in key_value_pairs.items():
-            if key == "ANSPRECHPARTNER":
-                if "Farina" in value:
-                    path = (
-                        Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Farina.docx"
-                    )
-                elif "Zoe" in value:
-                    path = Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Zoe.docx"
-                elif "Yasemin" in value:
-                    path = (
-                        Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Yasemin.docx"
-                    )
-                elif "Viktoria" in value:
-                    path = (
-                        Path(__file__).parent.parent
-                        / "static"
-                        / "templates"
-                        / "Vorlage Kandidatenprofil_Viktoria.docx"
-                    )
-                elif "Tina" in value:
-                    path = Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Tina.docx"
-                elif "Stephan" in value:
-                    path = (
-                        Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Stephan.docx"
-                    )
-                elif "Maike" in value:
-                    path = (
-                        Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Maike.docx"
-                    )
-                elif "Lucas" in value:
-                    path = (
-                        Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Lucas.docx"
-                    )
-                elif "Fynn" in value:
-                    path = Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Fynn.docx"
-                else:
-                    path = Path(__file__).parent.parent / "static" / "templates" / "Vorlage Kandidatenprofil_Kaan.docx"
-        return path
-
     def _replace_placeholders_in_document(self, doc: Document, replacements: Dict[str, str]):
         """
         Replace placeholders in the Word document with the provided values.
@@ -126,129 +79,21 @@ class ChatWordGenerator:
             "SCHULISCHE AUSBILDUNG",
         }
 
-        def format_background(value):
-            """Format the value of  background."""
-            if re.match(r"^\d", value):  # First letter is a number
-                lines = value.split("\n")
-                formatted_lines = []
-                for line in lines:
-                    if re.match(r"^\d", line):  # First letter is a number
-                        match = re.match(r"^([\d/]+(?:\s*-\s*(?:[\d/]+|heute))?)\s*(.*)", line)
-                        if match:
-                            line_1 = match.group(1)
-                            line_2 = match.group(2)
-                        formatted_line = line_1.strip() + "\t\t\t" + line_2.strip()
-                        formatted_lines.append(formatted_line)
-                    else:
-                        if len(line) < 70:
-                            if line.strip().startswith("•"):
-                                formatted_line = "\t\t\t\t           " + line[1:].strip()
-                                formatted_lines.append(formatted_line)
-                            else:
-                                formatted_line = "\t\t\t\t" + line.strip()
-                                formatted_lines.append(formatted_line)
-                        if len(line) > 70 and len(line) < 140:
-                            if line.strip().startswith("•"):
-                                formatted_line_1 = "\t\t\t\t           " + line[1:70].strip() + "-"
-                                formatted_line_2 = "\t\t\t\t              " + line[70:].strip()
-                                formatted_lines.append(formatted_line_1)
-                                formatted_lines.append(formatted_line_2)
-                            else:
-                                formatted_line_1 = "\t\t\t\t" + line.strip()[:70].strip() + "-"
-                                formatted_line_2 = "\t\t\t\t" + line.strip()[70:].strip()
-                                formatted_lines.append(formatted_line_1)
-                                formatted_lines.append(formatted_line_2)
-                        if len(line) > 140 and len(line) < 210:
-                            formatted_line_1 = "\t\t\t\t" + line.strip()[:70].strip() + "-"
-                            formatted_line_2 = "\t\t\t\t" + line.strip()[70:140].strip() + "-"
-                            formatted_line_3 = "\t\t\t\t" + line.strip()[140:].strip()
-                            formatted_lines.append(formatted_line_1)
-                            formatted_lines.append(formatted_line_2)
-                            formatted_lines.append(formatted_line_3)
-                        if len(line) > 210 and len(line) < 280:
-                            formatted_line_1 = "\t\t\t\t" + line.strip()[:70].strip() + "-"
-                            formatted_line_2 = "\t\t\t\t" + line.strip()[70:140].strip() + "-"
-                            formatted_line_3 = "\t\t\t\t" + line.strip()[140:210].strip() + "-"
-                            formatted_line_4 = "\t\t\t\t" + line.strip()[210:].strip()
-                            formatted_lines.append(formatted_line_1)
-                            formatted_lines.append(formatted_line_2)
-                            formatted_lines.append(formatted_line_3)
-                            formatted_lines.append(formatted_line_4)
-                        if len(line) > 280:
-                            formatted_line_1 = "\t\t\t\t" + line.strip()[:70].strip() + "-"
-                            formatted_line_2 = "\t\t\t\t" + line.strip()[70:140].strip() + "-"
-                            formatted_line_3 = "\t\t\t\t" + line.strip()[140:210].strip() + "-"
-                            formatted_line_4 = "\t\t\t\t" + line.strip()[210:280].strip() + "-"
-                            formatted_line_5 = "\t\t\t\t" + line.strip()[280:].strip()
-                            formatted_lines.append(formatted_line_1)
-                            formatted_lines.append(formatted_line_2)
-                            formatted_lines.append(formatted_line_3)
-                            formatted_lines.append(formatted_line_4)
-                            formatted_lines.append(formatted_line_5)
-                return "\n".join(formatted_lines)
-            else:
-                return value
-
-        def format_bullet_points(value):
-            """Format the value to replace placeholders with proper bullet points and indentation."""
-            lines = value.split("\n")
-            formatted_lines = []
-            for line in lines:
-                if line.strip().startswith("•"):
-                    if len(line) < 100:
-                        formatted_line = "        •  " + line[1:].strip()
-                        formatted_lines.append(formatted_line)
-                    if len(line) > 100 and len(line) < 180:
-                        formatted_line_1 = "        •  " + line.strip()[1:90].strip() + "-"
-                        formatted_line_2 = "           " + line.strip()[90:].strip()
-                        formatted_lines.append(formatted_line_1)
-                        formatted_lines.append(formatted_line_2)
-                    elif len(line) > 180:
-                        formatted_line_1 = "        •  " + line.strip()[1:90].strip() + "-"
-                        formatted_line_2 = "           " + line.strip()[90:180].strip() + "-"
-                        formatted_line_3 = "           " + line.strip()[180:].strip()
-                        formatted_lines.append(formatted_line_1)
-                        formatted_lines.append(formatted_line_2)
-                        formatted_lines.append(formatted_line_3)
-                elif line.strip().startswith("◦"):
-                    if len(line) < 90:
-                        formatted_line = "\t       ◦  " + line[1:].strip()
-                        formatted_lines.append(formatted_line)
-                    if len(line) > 90 and len(line) < 160:
-                        formatted_line_1 = "\t       ◦  " + line.strip()[1:80].strip() + "-"
-                        formatted_line_2 = "\t          " + line.strip()[80:].strip()
-                        formatted_lines.append(formatted_line_1)
-                        formatted_lines.append(formatted_line_2)
-                    elif len(line) > 160:
-                        formatted_line_1 = "\t       ◦  " + line.strip()[1:80].strip() + "-"
-                        formatted_line_2 = "\t          " + line.strip()[80:160].strip() + "-"
-                        formatted_line_3 = "\t          " + line.strip()[160:].strip()
-                        formatted_lines.append(formatted_line_1)
-                        formatted_lines.append(formatted_line_2)
-                        formatted_lines.append(formatted_line_3)
-                else:
-                    formatted_lines.append(line)
-            return "\n".join(formatted_lines)
-
         for paragraph in doc.paragraphs:
             for key, value in replacements.items():
-                formatted_value = format_bullet_points(value)
-                if key in background_placeholders:
-                    formatted_value = format_background(formatted_value)
                 placeholder = f"{{{{{key}}}}}"
                 if placeholder in paragraph.text:
-                    paragraph.text = paragraph.text.replace(placeholder, formatted_value)
+                    paragraph.text = paragraph.text.replace(placeholder, value)
                     if key in background_placeholders:
                         if re.match(r"^\d", value):
                             paragraph_text = paragraph.text.strip()
                             lines = paragraph_text.split("\n")
-                            if lines:
-                                paragraph.clear()
-                                # Add first line with bold formatting
-                                first_run = paragraph.add_run(lines[0] + "\n")
-                                first_run.bold = True
-                                # Add the rest of the paragraph without bold
-                                for line in lines[1:]:
+                            paragraph.clear()
+                            for line in lines:
+                                if re.match(r"^\d", line):
+                                    bold_run = paragraph.add_run(line + "\n")
+                                    bold_run.bold = True
+                                else:
                                     paragraph.add_run(line + "\n")
                     if key in center_aligned_placeholders:
                         paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
@@ -324,11 +169,8 @@ class ChatWordGenerator:
             # Extract key-value pairs from the messages
             key_value_pairs = self._extract_key_value_pairs(self.form_data.messages)
 
-            # Extract contact person from the messages
-            path = self._extract_contact_person_value(key_value_pairs)
-
             # Load the template document
-            doc = Document(path)
+            doc = Document(TEMPLATE_PATH)
 
             # Replace placeholders in the document
             self._replace_placeholders_in_document(doc, key_value_pairs)
