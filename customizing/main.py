@@ -1,4 +1,5 @@
-from utils import customize_images
+from utils import customize_images, word_template
+
 
 # TODO opacity hierüber setzen
 # TODO Tabnamen hierüber setzen
@@ -6,7 +7,7 @@ from utils import customize_images
 
 # * Functions vermutlich am besten über Endpunkt integrieren?
 
-RUN_SCRIPTS = {"customize_images": True}
+RUN_SCRIPTS = {"customize_images": False, "word_template": True}
 
 
 def main():
@@ -14,8 +15,9 @@ def main():
     for script in RUN_SCRIPTS.keys():
         if RUN_SCRIPTS[script]:
             print(f"\nStarte {script}...\n")
-            for category in customize_images.IMAGE_CONFIG.keys():
-                customize_images.process_image(category)
+            word_template.render()
+            # for category in customize_images.IMAGE_CONFIG.keys():
+            #     customize_images.process_image(category)
 
     print("Alle aktivierten Prozesse abgeschlossen.")
 
