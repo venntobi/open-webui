@@ -125,7 +125,7 @@
 											($i18n.language === 'dg-DG'
 												? `/doge.png`
 												: `${WEBUI_BASE_URL}/static/favicon.png`)}
-										class=" w-10 h-10 sm:w-12 sm:h-12 rounded-full border-[1px] border-gray-200 dark:border-none"
+										class=" w-10 h-10 sm:w-12 sm:h-12"
 										alt="logo"
 										draggable="false"
 									/>
@@ -135,9 +135,19 @@
 					</div>
 				</div>
 
-				<div class=" text-3xl sm:text-4xl line-clamp-1" in:fade={{ duration: 100 }}>
+				<div
+					class=" text-3xl sm:text-4xl leading-none line-clamp-1 self-end"
+					style="font-family: 'Ermilov Bold'"
+					in:fade={{ duration: 100 }}
+				>
 					{#if models[selectedModelIdx]?.name}
-						{models[selectedModelIdx]?.name}
+						{#each models[selectedModelIdx].name.split('') as letter, i}
+							{#if i === 3}
+								<span style="color: #86BC25;">{letter}</span>
+							{:else}
+								<span style="color: #1E3258;">{letter}</span>
+							{/if}
+						{/each}
 					{:else}
 						{$i18n.t('Hello, {{name}}', { name: $user.name })}
 					{/if}
