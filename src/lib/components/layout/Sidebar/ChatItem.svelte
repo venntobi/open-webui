@@ -192,6 +192,12 @@
 	});
 
 	let showDeleteConfirm = false;
+
+	function removeEmojis(text: string): string {
+		return text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F]\s*/gu, '').trim();
+	}
+
+	const titleClean = removeEmojis(title);
 </script>
 
 <ShareChatModal bind:show={showShareChatModal} chatId={id} />
@@ -269,7 +275,7 @@
 		>
 			<div class=" flex self-center flex-1 w-full">
 				<div class=" text-left self-center overflow-hidden w-full h-[20px]">
-					{title}
+					{titleClean}
 				</div>
 			</div>
 		</a>
