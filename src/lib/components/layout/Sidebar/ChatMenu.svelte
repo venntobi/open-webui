@@ -43,7 +43,7 @@
 	let pinned = false;
 
 	function removeEmojis(text: string): string {
-		return text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F]/gu, '').trim();
+		return text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F]\s*/gu, '').trim();
 	}
 
 	const pinHandler = async () => {
