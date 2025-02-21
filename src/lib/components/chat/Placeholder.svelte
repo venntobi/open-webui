@@ -135,19 +135,9 @@
 					</div>
 				</div>
 
-				<div
-					class=" text-3xl sm:text-4xl leading-none line-clamp-1 self-end"
-					style="font-family: 'Ermilov Bold'"
-					in:fade={{ duration: 100 }}
-				>
+				<div class=" text-3xl sm:text-4xl line-clamp-1" in:fade={{ duration: 100 }}>
 					{#if models[selectedModelIdx]?.name}
-						{#each models[selectedModelIdx].name.split('') as letter, i}
-							{#if i === 3}
-								<span style="color: #86BC25;">{letter}</span>
-							{:else}
-								<span style="color: #1E3258;">{letter}</span>
-							{/if}
-						{/each}
+						{models[selectedModelIdx]?.name}
 					{:else}
 						{$i18n.t('Hello, {{name}}', { name: $user.name })}
 					{/if}
