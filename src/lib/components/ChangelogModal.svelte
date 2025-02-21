@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { onMount, getContext } from 'svelte';
 	import { Confetti } from 'svelte-confetti';
 
@@ -117,4 +117,4 @@
 			</button>
 		</div>
 	</div>
-</Modal>
+</Modal> -->
