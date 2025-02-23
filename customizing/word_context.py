@@ -15,6 +15,7 @@ context = {
     "familienstand": "Verheiratet",
     "aktuelle_position": "Leitender Ingenieur",
     "arbeitgeber": "TechCorp AG",
+    "website": "www.site.de",
     "einkommen": "EUR 100.000",
     "einkommen_split": "EUR 80.000 / EUR 20.000 (variabel)",
     "firmenwagen": "Ja",
