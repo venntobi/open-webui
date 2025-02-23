@@ -5,6 +5,19 @@ import uuid
 from datetime import timedelta
 from pathlib import Path
 from typing import Callable, Optional
+import docx
+
+
+def read_docx_content(filepath: str) -> str:
+    """
+    Liest den Inhalt eines Word-Dokuments (.docx) ein und
+    gibt ihn als String zurück.
+    """
+    document = docx.Document(filepath)
+    paragraphs = [para.text for para in document.paragraphs]
+    # Die Absätze mit Zeilenumbruch verbinden
+    content = "\n".join(paragraphs)
+    return content
 
 
 def get_message_list(messages, message_id):
@@ -26,9 +39,7 @@ def get_message_list(messages, message_id):
     message_list = []
 
     while current_message:
-        message_list.insert(
-            0, current_message
-        )  # Insert the message at the beginning of the list
+        message_list.insert(0, current_message)  # Insert the message at the beginning of the list
         parent_id = current_message["parentId"]
         current_message = messages.get(parent_id) if parent_id else None
 
@@ -36,12 +47,7 @@ def get_message_list(messages, message_id):
 
 
 def get_messages_content(messages: list[dict]) -> str:
-    return "\n".join(
-        [
-            f"{message['role'].upper()}: {get_content_from_message(message)}"
-            for message in messages
-        ]
-    )
+    return "\n".join([f"{message['role'].upper()}: {get_content_from_message(message)}" for message in messages])
 
 
 def get_last_user_message_item(messages: list[dict]) -> Optional[dict]:
@@ -97,9 +103,7 @@ def pop_system_message(messages: list[dict]) -> tuple[Optional[dict], list[dict]
     return get_system_message(messages), remove_system_message(messages)
 
 
-def prepend_to_first_user_message_content(
-    content: str, messages: list[dict]
-) -> list[dict]:
+def prepend_to_first_user_message_content(content: str, messages: list[dict]) -> list[dict]:
     for message in messages:
         if message["role"] == "user":
             if isinstance(message["content"], list):
@@ -310,16 +314,12 @@ def parse_ollama_modelfile(model_text):
     data = {"base_model_id": None, "params": {}}
 
     # Parse base model
-    base_model_match = re.search(
-        r"^FROM\s+(\w+)", model_text, re.MULTILINE | re.IGNORECASE
-    )
+    base_model_match = re.search(r"^FROM\s+(\w+)", model_text, re.MULTILINE | re.IGNORECASE)
     if base_model_match:
         data["base_model_id"] = base_model_match.group(1)
 
     # Parse template
-    template_match = re.search(
-        r'TEMPLATE\s+"""(.+?)"""', model_text, re.DOTALL | re.IGNORECASE
-    )
+    template_match = re.search(r'TEMPLATE\s+"""(.+?)"""', model_text, re.DOTALL | re.IGNORECASE)
     if template_match:
         data["params"] = {"template": template_match.group(1).strip()}
 
@@ -353,12 +353,8 @@ def parse_ollama_modelfile(model_text):
         data["params"]["adapter"] = adapter_match.group(1)
 
     # Parse system description
-    system_desc_match = re.search(
-        r'SYSTEM\s+"""(.+?)"""', model_text, re.DOTALL | re.IGNORECASE
-    )
-    system_desc_match_single = re.search(
-        r"SYSTEM\s+([^\n]+)", model_text, re.IGNORECASE
-    )
+    system_desc_match = re.search(r'SYSTEM\s+"""(.+?)"""', model_text, re.DOTALL | re.IGNORECASE)
+    system_desc_match_single = re.search(r"SYSTEM\s+([^\n]+)", model_text, re.IGNORECASE)
 
     if system_desc_match:
         data["params"]["system"] = system_desc_match.group(1).strip()

@@ -6,7 +6,7 @@ from open_webui.models.chats import ChatTitleMessagesForm
 import ast
 
 # from open_webui.routers.knowledge import get_knowledge_by_id
-TEMPLATE_PATH = Path(__file__).parent.parent / "static" / "templates" / "Kandidatenprofil_Vorlage.docx"
+TEMPLATE_PATH = Path(__file__).parent.parent / "static" / "templates" / "bludau" / "template.docx"
 
 
 class ChatWordGenerator:
