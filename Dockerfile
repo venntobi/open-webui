@@ -6,7 +6,7 @@ ARG USE_OLLAMA=false
 # Tested with cu117 for CUDA 11 and cu121 for CUDA 12 (default)
 ARG USE_CUDA_VER=cu121
 # any sentence transformer model; models to use can be found at https://huggingface.co/models?library=sentence-transformers
-# Leaderboard: https://huggingface.co/spaces/mteb/leaderboard 
+# Leaderboard: https://huggingface.co/spaces/mteb/leaderboard
 # for better performance and multilangauge support use "intfloat/multilingual-e5-large" (~2.5GB) or "intfloat/multilingual-e5-base" (~1.5GB)
 # IMPORTANT: If you change the embedding model (sentence-transformers/all-MiniLM-L6-v2) and vice versa, you aren't able to use RAG Chat with your previous documents loaded in the WebUI! You need to re-embed them.
 ARG USE_EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
@@ -130,6 +130,18 @@ RUN if [ "$USE_OLLAMA" = "true" ]; then \
     # cleanup
     rm -rf /var/lib/apt/lists/*; \
     fi
+
+# Copy and install the custom CA certificate
+COPY fida-server-ca/FIDA_Server_Authority.crt /usr/local/share/ca-certificates/
+RUN update-ca-certificates
+
+# Append the certificate to the system CA bundle
+RUN cat /usr/local/share/ca-certificates/FIDA_Server_Authority.crt >> /etc/ssl/certs/ca-certificates.crt
+
+# Set environment variables for SSL certificates
+ENV PATH=/root/.local/bin:$PATH
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
 # install python dependencies
 COPY --chown=$UID:$GID ./backend/requirements.txt ./requirements.txt

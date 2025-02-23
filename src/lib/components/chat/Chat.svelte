@@ -1937,14 +1937,16 @@
 					{#if $settings?.backgroundImageUrl}
 						<div
 							class="absolute inset-0 bg-cover bg-center z-0"
-							style="background-image: url({$settings.backgroundImageUrl}); opacity: {background_opacity /
-								100};"
+							style="background-image: linear-gradient(rgba(255, 255, 255, {1 -
+								background_opacity / 100}), rgba(255, 255, 255, {1 -
+								background_opacity / 100})), url({$settings.backgroundImageUrl});"
 						></div>
 					{:else}
 						<div
 							class="absolute inset-0 bg-cover bg-center z-0"
-							style="background-image: url('/static/custom-background.png'); opacity: {background_opacity /
-								100};"
+							style="background-image: linear-gradient(rgba(255, 255, 255, {1 -
+								background_opacity / 100}), rgba(255, 255, 255, {1 -
+								background_opacity / 100})), url('/static/custom-background.png');"
 						></div>
 					{/if}
 

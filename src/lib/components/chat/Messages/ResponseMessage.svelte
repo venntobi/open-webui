@@ -142,7 +142,7 @@
 	let showRateComment = false;
 
 	function removeEmojis(text: string): string {
-		return text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F]/gu, '').trim();
+		return text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F]\s*/gu, '').trim();
 	}
 
 	const copyToClipboard = async (text) => {
@@ -899,7 +899,7 @@
 									</button>
 								</Tooltip>
 
-								<Tooltip content={$i18n.t('Read Aloud')} placement="bottom">
+								<!-- <Tooltip content={$i18n.t('Read Aloud')} placement="bottom">
 									<button
 										id="speak-button-{message.id}"
 										class="{isLastMessage
@@ -975,7 +975,7 @@
 											</svg>
 										{/if}
 									</button>
-								</Tooltip>
+								</Tooltip> -->
 
 								{#if $config?.features.enable_image_generation && ($user.role === 'admin' || $user?.permissions?.features?.image_generation) && !readOnly}
 									<Tooltip content={$i18n.t('Generate Image')} placement="bottom">
@@ -1084,7 +1084,7 @@
 								{/if}
 
 								{#if !readOnly}
-									{#if $config?.features.enable_message_rating ?? true}
+									<!-- {#if $config?.features.enable_message_rating ?? true}
 										<Tooltip content={$i18n.t('Good Response')} placement="bottom">
 											<button
 												class="{isLastMessage
@@ -1156,7 +1156,7 @@
 												</svg>
 											</button>
 										</Tooltip>
-									{/if}
+									{/if} -->
 
 									{#if isLastMessage}
 										<Tooltip content={$i18n.t('Continue Response')} placement="bottom">
