@@ -7,6 +7,9 @@ version: 0.1.0
 license: MIT
 """
 
+# * Wichtige Funktion
+# * Der Rest ist in:  backend\open_webui\static\templates\bludau
+
 from typing import List, Union, Generator, Iterator
 from pydantic import BaseModel
 import requests
@@ -53,6 +56,7 @@ report = read_pdf_content(EXAMPLE_REPORT_PATH)
 questionare = read_pdf_content(EXAMPLE_QUESTIONARE_PATH)
 
 # -- SYSTEM PROMPT --
+# ? Auslagern? Dann kann man besser anpassen
 SYSTEM_PROMPT = f"""
 Du bist ein Tool zur Analyse und Zusammenfassung von Lebensläufen und Fragebögen. Deine Aufgabe ist es, alle relevanten Informationen vollständig und strukturiert in einem festen JSON-Schema zusammenzufassen. Achte insbesondere auf die Vollständigkeit der beruflichen Erfahrung. Fehlende Informationen dürfen nicht erfunden werden, sondern müssen weggelassen werden.
 
@@ -79,6 +83,9 @@ Ergebnis: {context_example}
 
 class Pipe:
     class Valves(BaseModel):
+        # TODO: für openai-schnittstelle: env anpassen
+        # TODO: url zusammenbau anpassen
+        # TODO: Bei url muss o1 angesprochen werden
         # You can add your custom valves here.
         AZURE_OPENAI_API_KEY: str = os.getenv("AZURE_OPENAI_API_KEY_GPT", "API_KEY")
         AZURE_OPENAI_ENDPOINT: str = os.getenv("AZURE_OPENAI_ENDPOINT_GPT", "API_ENDPOINT")
@@ -91,13 +98,13 @@ class Pipe:
         # The identifier must be unique across all pipelines.
         # The identifier must be an alphanumeric string that can include underscores or hyphens. It cannot contain spaces, special characters, slashes, or backslashes.
         # self.id = "azure_openai_pipeline"
+        # TODO: Umnennen zu Kandidatenprofil oder ähnlich
         self.name = "Azure OpenAI Pipe"
         self.valves = self.Valves()
         pass
 
     async def on_startup(self):
         # This function is called when the server is started.
-        print(f"Der System Prompt: ", SYSTEM_PROMPT)
         print(f"on_startup:{__name__}")
         pass
 
@@ -122,7 +129,7 @@ class Pipe:
             "api-key": self.valves.AZURE_OPENAI_API_KEY,
             "Content-Type": "application/json",
         }
-
+        # TODO: Hier url muss angepasst werden
         url = (
             f"{self.valves.AZURE_OPENAI_ENDPOINT}/openai/deployments/"
             f"{self.valves.AZURE_OPENAI_DEPLOYMENT_NAME}/chat/completions"
