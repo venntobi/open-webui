@@ -3,7 +3,6 @@ context = {
     "position": "IT-Berater FI/CO (m/w/d)",
     "vorname": "Frank",
     "nachname": "Garzarek",
-    # "kandidaten_nr": "60270",
     "geburtsdatum": "04.08.1963",
     "geburtsstadt": "Duisburg",
     "geburtsland": "Deutschland",
@@ -36,7 +35,6 @@ context = {
             "Koordinierung und Abstimmungen mit Stakeholdern",
         ],
     },
-    # "anrede": {"anrede": "Herr", "possesiv": "sein", "pronomen": "er"},
     "schulnoten_einleitung": "Der Kandidat verfügt über 30 Jahre IT-Erfahrung und beschreibt seine Erfahrungen und Kenntnisse in den nachstehenden Themenfeldern und benotet diese im Schulnotensystem (1=sehr gut bis 6=ungenügend) wie folgt:",
     "schulnoten_bewertung": [
         {
