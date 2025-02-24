@@ -137,7 +137,7 @@
 
 				<div
 					class="flex items-center justify-center text-3xl sm:text-4xl leading-none"
-					style="font-family: 'Ermilov Bold'; height: 200px;"
+					style="font-family: 'Ermilov Bold'; height: 80px;"
 					in:fade={{ duration: 100 }}
 				>
 					{#if models[selectedModelIdx]?.name}
