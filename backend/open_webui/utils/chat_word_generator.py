@@ -4,6 +4,8 @@ from typing import Dict, Any, List
 from docxtpl import DocxTemplate
 from open_webui.models.chats import ChatTitleMessagesForm
 import ast
+import json
+import re
 
 # from open_webui.routers.knowledge import get_knowledge_by_id
 TEMPLATE_PATH = Path(__file__).parent.parent / "static" / "templates" / "bludau" / "template.docx"
@@ -31,6 +33,9 @@ class ChatWordGenerator:
         """
         try:
             string_response = self.form_data.messages[-1].get("content", "")
+            match = re.search(r"\{.*\}", string_response, re.DOTALL)
+            if match:
+                string_response = match.group(0)
             context = ast.literal_eval(string_response)
             # Load the template document
             doc = DocxTemplate(TEMPLATE_PATH)

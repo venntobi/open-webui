@@ -18,67 +18,7 @@ import docx
 import PyPDF2
 
 
-from open_webui.static.templates.word_context_template import (
-    context as context_template,
-)
-from open_webui.static.templates.word_context_kandidat3 import (
-    context as context_example,
-)
-
-
-# TODO: in externe Datei ausgliedern, z.B. backend.open_webui.utils.misc
-def read_pdf_content(filepath: str) -> str:
-    """
-    Liest den Inhalt einer PDF-Datei ein und gibt ihn als String zurück.
-    """
-    text_content = []
-
-    with open(filepath, "rb") as file:
-        reader = PyPDF2.PdfReader(file)
-        # Schleife durch alle Seiten
-        for page_num in range(len(reader.pages)):
-            page = reader.pages[page_num]
-            # Extrahiert den Text pro Seite
-            page_text = page.extract_text()
-            if page_text:
-                text_content.append(page_text)
-
-    # Die einzelnen Seiten durch einen Zeilenumbruch trennen
-    return "\n".join(text_content)
-
-
-EXAMPLE_CV_PATH = os.path.join("backend", "open_webui", "static", "templates", "bludau", "CV.pdf")
-EXAMPLE_REPORT_PATH = os.path.join("backend", "open_webui", "static", "templates", "bludau", "Report.pdf")
-EXAMPLE_QUESTIONARE_PATH = os.path.join("backend", "open_webui", "static", "templates", "bludau", "Fragebogen.pdf")
-
-cv = read_pdf_content(EXAMPLE_CV_PATH)
-report = read_pdf_content(EXAMPLE_REPORT_PATH)
-questionare = read_pdf_content(EXAMPLE_QUESTIONARE_PATH)
-
-# -- SYSTEM PROMPT --
-# ? Auslagern? Dann kann man besser anpassen
-SYSTEM_PROMPT = f"""
-Du bist ein Tool zur Analyse und Zusammenfassung von Lebensläufen und Fragebögen. Deine Aufgabe ist es, alle relevanten Informationen vollständig und strukturiert in einem festen JSON-Schema zusammenzufassen. Achte insbesondere auf die Vollständigkeit der beruflichen Erfahrung. Fehlende Informationen dürfen nicht erfunden werden, sondern müssen weggelassen werden.
-
-Anweisungen:
-
-    Extrahiere und strukturiere die Daten gemäß dem vorgegebenen JSON-Schema.
-    Achte besonders auf die vollständige Erfassung der fachlichen Eignung.
-    Halte dich exakt an das vorgegebene Format – keine zusätzlichen Erläuterungen, Kommentare oder Abweichungen.
-    Falls eine Kategorie nicht im Lebenslauf oder Fragebogen vorhanden ist, lasse sie weg, aber ändere nicht die Struktur des Outputs.
-
-Ausgabe:
-Dein Output muss genau diesem JSON-Schema entsprechen:
-{context_template}. 
-Jede generierte Ausgabe muss genau diesem Schema folgen, ohne zusätzlichen Text oder Erklärungen.
-
-Hier ist ein Beispiel aus Dateien, die du bekommst und wie das Endergebnis aussehen muss:
-Beispieldatei 1: {cv}
-Beispieldatei 2: {report}
-Beispieldatei 3: {questionare}
-
-Ergebnis: {context_example}
-"""
+from backend.open_webui.static.prompts.system_prompt import SYSTEM_PROMPT
 
 
 class Pipe:
@@ -99,7 +39,7 @@ class Pipe:
         # The identifier must be an alphanumeric string that can include underscores or hyphens. It cannot contain spaces, special characters, slashes, or backslashes.
         # self.id = "azure_openai_pipeline"
         # TODO: Umnennen zu Kandidatenprofil oder ähnlich
-        self.name = "Azure OpenAI Pipe"
+        self.name = "Kandidatenprofil_Azure"
         self.valves = self.Valves()
         pass
 
